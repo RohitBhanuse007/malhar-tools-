@@ -17,12 +17,23 @@ const PRODUCTS_COLLECTION = `shops/${SHOP_ID}/products`;
 const LOCAL_STORAGE_KEY = 'malhar_tools_purchases';
 const PRODUCTS_LOCAL_KEY = 'malhar_tools_products';
 
+import { INVOICE_PURCHASES } from '../../data/invoiceProducts';
+
 function getLocalPurchases(): Purchase[] {
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) {
+      saveLocalPurchases(INVOICE_PURCHASES);
+      return INVOICE_PURCHASES;
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      saveLocalPurchases(INVOICE_PURCHASES);
+      return INVOICE_PURCHASES;
+    }
+    return parsed;
   } catch {
-    return [];
+    return INVOICE_PURCHASES;
   }
 }
 

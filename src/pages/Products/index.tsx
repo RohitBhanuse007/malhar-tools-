@@ -9,7 +9,8 @@ import {
   Truck,
   ShoppingCart,
   AlertTriangle,
-  Info
+  Info,
+  Sparkles
 } from 'lucide-react';
 import { Product, ShopSettings } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -31,6 +32,7 @@ interface ProductsPageProps {
   onDeleteProduct: (id: string) => Promise<void>;
   onQuickPurchase: (productId: string) => void;
   onQuickSale: (productId: string) => void;
+  onImportInvoiceData?: () => Promise<void>;
   shopSettings?: ShopSettings | null;
   isOpenAddModalExternal?: boolean;
   onCloseAddModalExternal?: () => void;
@@ -43,6 +45,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   onDeleteProduct,
   onQuickPurchase,
   onQuickSale,
+  onImportInvoiceData,
   shopSettings,
   isOpenAddModalExternal = false,
   onCloseAddModalExternal,
@@ -144,14 +147,26 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             {t('products.subtitle')}
           </p>
         </div>
-        <Button
-          variant="primary"
-          leftIcon={<Plus className="w-4 h-4" />}
-          onClick={() => setIsAddModalOpen(true)}
-          className="shadow-sm shadow-brand-600/30"
-        >
-          {t('products.addProduct')}
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {onImportInvoiceData && (
+            <Button
+              variant="outline"
+              leftIcon={<Sparkles className="w-4 h-4 text-amber-500" />}
+              onClick={onImportInvoiceData}
+              className="bg-amber-50/60 border-amber-300 text-amber-900 hover:bg-amber-100/80 shadow-2xs text-xs sm:text-sm"
+            >
+              Load Invoice Stock (14 Items)
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            leftIcon={<Plus className="w-4 h-4" />}
+            onClick={() => setIsAddModalOpen(true)}
+            className="shadow-sm shadow-brand-600/30 text-xs sm:text-sm"
+          >
+            {t('products.addProduct')}
+          </Button>
+        </div>
       </div>
 
       {/* Filter & Search Bar */}

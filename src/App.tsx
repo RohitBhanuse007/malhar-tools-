@@ -19,6 +19,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  seedInvoiceData,
 } from './services/firebase/productService';
 import { subscribeToPurchases, createPurchase } from './services/firebase/purchaseService';
 import { subscribeToSales, createSale, CreateSaleInput } from './services/firebase/saleService';
@@ -71,6 +72,9 @@ export const App: React.FC = () => {
   // Subscribe to real-time updates when authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
+
+    // Preload items from the invoices
+    seedInvoiceData().catch(console.error);
 
     const unsubs = [
       subscribeToProducts(setProducts),
@@ -225,6 +229,9 @@ export const App: React.FC = () => {
           }}
           onQuickPurchase={handleQuickPurchase}
           onQuickSale={handleQuickSale}
+          onImportInvoiceData={async () => {
+            await seedInvoiceData();
+          }}
           shopSettings={shopSettings}
           isOpenAddModalExternal={isAddProductOpen}
           onCloseAddModalExternal={() => setIsAddProductOpen(false)}

@@ -17,13 +17,24 @@ import { Product } from '../../types';
 const PRODUCTS_COLLECTION = `shops/${SHOP_ID}/products`;
 const LOCAL_STORAGE_KEY = 'malhar_tools_products';
 
+import { INVOICE_PRODUCTS, INVOICE_PURCHASES } from '../../data/invoiceProducts';
+
 // Helper for local fallback
 function getLocalProducts(): Product[] {
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) {
+      saveLocalProducts(INVOICE_PRODUCTS);
+      return INVOICE_PRODUCTS;
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      saveLocalProducts(INVOICE_PRODUCTS);
+      return INVOICE_PRODUCTS;
+    }
+    return parsed;
   } catch {
-    return [];
+    return INVOICE_PRODUCTS;
   }
 }
 
@@ -154,11 +165,39 @@ export function subscribeToProducts(callback: (products: Product[]) => void): ()
     return unsubscribe;
   }
 
-  // Local storage listener
   const poll = () => {
     callback(getLocalProducts().filter(p => !p.isDeleted));
   };
   poll();
   const interval = setInterval(poll, 1500);
   return () => clearInterval(interval);
+}
+
+export async function seedInvoiceData(): Promise<number> {
+  const existing = getLocalProducts();
+  const existingNames = new Set(existing.map(p => p.name.trim().toLowerCase()));
+  const updatedProducts = [...existing];
+  let addedCount = 0;
+
+  for (const item of INVOICE_PRODUCTS) {
+    if (!existingNames.has(item.name.trim().toLowerCase())) {
+      updatedProducts.push(item);
+      addedCount++;
+    }
+  }
+  saveLocalProducts(updatedProducts);
+
+  const rawPurchases = localStorage.getItem('malhar_tools_purchases');
+  const existingPurchases = rawPurchases ? JSON.parse(rawPurchases) : [];
+  const existingPurIds = new Set(existingPurchases.map((p: any) => p.id));
+  const updatedPurchases = [...existingPurchases];
+
+  for (const pur of INVOICE_PURCHASES) {
+    if (!existingPurIds.has(pur.id)) {
+      updatedPurchases.push(pur);
+    }
+  }
+  localStorage.setItem('malhar_tools_purchases', JSON.stringify(updatedPurchases));
+
+  return addedCount;
 }
