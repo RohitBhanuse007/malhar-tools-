@@ -267,8 +267,13 @@ export function subscribeToCustomers(callback: (customers: Customer[]) => void):
     return unsubscribe;
   }
 
+  let lastCustRaw = '';
   const poll = () => {
-    callback(getLocalCustomers());
+    const raw = localStorage.getItem(LOCAL_CUSTOMERS_KEY) || '';
+    if (raw !== lastCustRaw) {
+      lastCustRaw = raw;
+      callback(getLocalCustomers());
+    }
   };
   poll();
   const interval = setInterval(poll, 1500);
@@ -292,9 +297,14 @@ export function subscribeToCustomerPayments(
     return unsubscribe;
   }
 
+  let lastPayRaw = '';
   const poll = () => {
-    const items = getLocalPayments();
-    callback(customerId ? items.filter(p => p.customerId === customerId) : items);
+    const raw = localStorage.getItem(LOCAL_PAYMENTS_KEY) || '';
+    if (raw !== lastPayRaw) {
+      lastPayRaw = raw;
+      const items = getLocalPayments();
+      callback(customerId ? items.filter(p => p.customerId === customerId) : items);
+    }
   };
   poll();
   const interval = setInterval(poll, 1500);

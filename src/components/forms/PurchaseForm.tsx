@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Product, Purchase, PaymentStatus } from '../../types';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -26,7 +26,10 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
 
   const [productId, setProductId] = useState(preselectedProductId || (products[0]?.id || ''));
   const [quantity, setQuantity] = useState('1');
-  const [purchasePrice, setPurchasePrice] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState(() => {
+    const initialProd = products.find((p) => p.id === (preselectedProductId || products[0]?.id));
+    return initialProd ? String(initialProd.purchasePrice || 0) : '';
+  });
   const [date, setDate] = useState(getTodayDateString());
   const [supplierName, setSupplierName] = useState('');
   const [supplierContact, setSupplierContact] = useState('');
@@ -34,15 +37,20 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Auto populate purchase price when product is selected
+  const lastPopulatedProductIdRef = useRef<string>(productId);
+
+  // Auto populate purchase price ONLY when product changes or initial load
   useEffect(() => {
     if (productId) {
-      const selectedProduct = products.find((p) => p.id === productId);
-      if (selectedProduct && !purchasePrice) {
-        setPurchasePrice(String(selectedProduct.purchasePrice || 0));
+      if (productId !== lastPopulatedProductIdRef.current || !purchasePrice) {
+        const selectedProduct = products.find((p) => p.id === productId);
+        if (selectedProduct) {
+          setPurchasePrice(String(selectedProduct.purchasePrice || 0));
+          lastPopulatedProductIdRef.current = productId;
+        }
       }
     }
-  }, [productId, products, purchasePrice]);
+  }, [productId, products]);
 
   const selectedProduct = products.find((p) => p.id === productId);
   const totalAmount = (Number(quantity) || 0) * (Number(purchasePrice) || 0);
@@ -100,8 +108,10 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
         label={t('purchases.product')}
         value={productId}
         onChange={(e) => {
-          setProductId(e.target.value);
-          const p = products.find((item) => item.id === e.target.value);
+          const newId = e.target.value;
+          setProductId(newId);
+          lastPopulatedProductIdRef.current = newId;
+          const p = products.find((item) => item.id === newId);
           if (p) setPurchasePrice(String(p.purchasePrice || 0));
           if (errors.productId) setErrors((prev) => ({ ...prev, productId: '' }));
         }}

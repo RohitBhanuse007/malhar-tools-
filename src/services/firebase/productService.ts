@@ -165,8 +165,13 @@ export function subscribeToProducts(callback: (products: Product[]) => void): ()
     return unsubscribe;
   }
 
+  let lastRaw = '';
   const poll = () => {
-    callback(getLocalProducts().filter(p => !p.isDeleted));
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY) || '';
+    if (raw !== lastRaw) {
+      lastRaw = raw;
+      callback(getLocalProducts().filter(p => !p.isDeleted));
+    }
   };
   poll();
   const interval = setInterval(poll, 1500);

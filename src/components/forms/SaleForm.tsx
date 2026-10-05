@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Product, Customer, PaymentMode } from '../../types';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -7,6 +7,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { validateSale } from '../../utils/validators';
 import { getTodayDateString, formatCurrency } from '../../utils/formatters';
 import { CreateSaleInput } from '../../services/firebase/saleService';
+import { updateProduct } from '../../services/firebase/productService';
 import { AlertCircle } from 'lucide-react';
 
 interface SaleFormProps {
@@ -26,11 +27,15 @@ export const SaleForm: React.FC<SaleFormProps> = ({
   isLoading = false,
   preselectedProductId,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [productId, setProductId] = useState(preselectedProductId || (products[0]?.id || ''));
   const [quantity, setQuantity] = useState('1');
-  const [sellingPrice, setSellingPrice] = useState('');
+  const [sellingPrice, setSellingPrice] = useState(() => {
+    const initialProd = products.find((p) => p.id === (preselectedProductId || products[0]?.id));
+    return initialProd ? String(initialProd.sellingPrice || 0) : '';
+  });
+  const [updateMasterPrice, setUpdateMasterPrice] = useState(false);
   const [date, setDate] = useState(getTodayDateString());
   const [paymentMode, setPaymentMode] = useState<PaymentMode>('Cash');
   const [customerName, setCustomerName] = useState('');
@@ -43,12 +48,17 @@ export const SaleForm: React.FC<SaleFormProps> = ({
   const selectedProduct = products.find((p) => p.id === productId);
   const availableStock = selectedProduct ? Number(selectedProduct.currentStock) || 0 : 0;
 
-  // Auto populate selling price when product changes
+  const lastPopulatedProductIdRef = useRef<string>(productId);
+
+  // Auto populate selling price ONLY when selecting a new product or initial load
   useEffect(() => {
     if (productId) {
-      const p = products.find((item) => item.id === productId);
-      if (p) {
-        setSellingPrice(String(p.sellingPrice || 0));
+      if (productId !== lastPopulatedProductIdRef.current || !sellingPrice) {
+        const p = products.find((item) => item.id === productId);
+        if (p) {
+          setSellingPrice(String(p.sellingPrice || 0));
+          lastPopulatedProductIdRef.current = productId;
+        }
       }
     }
   }, [productId, products]);
@@ -93,6 +103,19 @@ export const SaleForm: React.FC<SaleFormProps> = ({
       return;
     }
 
+    if (
+      updateMasterPrice &&
+      Number(sellingPrice) > 0 &&
+      selectedProduct &&
+      Number(sellingPrice) !== Number(selectedProduct.sellingPrice)
+    ) {
+      try {
+        await updateProduct(productId, { sellingPrice: Number(sellingPrice) });
+      } catch (err) {
+        console.error('Failed to update product master selling price:', err);
+      }
+    }
+
     await onSubmit({
       productId,
       productName: selectedProduct.name,
@@ -135,9 +158,14 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         label={t('sales.product')}
         value={productId}
         onChange={(e) => {
-          setProductId(e.target.value);
-          const p = products.find((item) => item.id === e.target.value);
-          if (p) setSellingPrice(String(p.sellingPrice || 0));
+          const newId = e.target.value;
+          setProductId(newId);
+          lastPopulatedProductIdRef.current = newId;
+          const p = products.find((item) => item.id === newId);
+          if (p) {
+            setSellingPrice(String(p.sellingPrice || 0));
+            setUpdateMasterPrice(false);
+          }
           if (errors.productId) setErrors((prev) => ({ ...prev, productId: '' }));
         }}
         options={productOptions}
@@ -194,6 +222,29 @@ export const SaleForm: React.FC<SaleFormProps> = ({
           required
         />
       </div>
+
+      {/* Price Difference Indicator & Optional Master Price Update */}
+      {selectedProduct && Number(sellingPrice) > 0 && Number(sellingPrice) !== Number(selectedProduct.sellingPrice) && (
+        <div className="p-2.5 rounded-xl bg-amber-50/90 border border-amber-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shadow-2xs">
+          <span className="text-slate-600">
+            {language === 'mr' ? 'प्रॉडक्टची मूळ किंमत:' : 'Catalog Default Price:'}{' '}
+            <span className="font-bold font-mono text-slate-800">₹{selectedProduct.sellingPrice}</span>
+          </span>
+          <label className="inline-flex items-center gap-2 cursor-pointer font-semibold text-amber-900 hover:text-amber-950">
+            <input
+              type="checkbox"
+              checked={updateMasterPrice}
+              onChange={(e) => setUpdateMasterPrice(e.target.checked)}
+              className="w-4 h-4 rounded text-amber-600 border-amber-400 focus:ring-amber-500"
+            />
+            <span>
+              {language === 'mr'
+                ? `मूळ प्रॉडक्टची किंमत पण ₹${sellingPrice} करा`
+                : `Update catalog price to ₹${sellingPrice}`}
+            </span>
+          </label>
+        </div>
+      )}
 
       {/* Total Amount Display Banner */}
       <div className="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between font-semibold text-sm">

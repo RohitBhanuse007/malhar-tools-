@@ -259,8 +259,13 @@ export function subscribeToSales(callback: (sales: Sale[]) => void): () => void 
     return unsubscribe;
   }
 
+  let lastRaw = '';
   const poll = () => {
-    callback(getLocalSales());
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY) || '';
+    if (raw !== lastRaw) {
+      lastRaw = raw;
+      callback(getLocalSales());
+    }
   };
   poll();
   const interval = setInterval(poll, 1500);

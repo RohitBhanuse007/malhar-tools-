@@ -79,8 +79,13 @@ export function subscribeToStockMovements(callback: (movements: StockMovement[])
     return unsubscribe;
   }
 
+  let lastRaw = '';
   const poll = () => {
-    callback(getLocalMovements());
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY) || '';
+    if (raw !== lastRaw) {
+      lastRaw = raw;
+      callback(getLocalMovements());
+    }
   };
   poll();
   const interval = setInterval(poll, 1500);

@@ -111,8 +111,13 @@ export function subscribeToShopSettings(callback: (settings: ShopSettings) => vo
     return unsubscribe;
   }
 
+  let lastRaw = '';
   const poll = () => {
-    callback(getLocalSettings());
+    const raw = localStorage.getItem(LOCAL_SETTINGS_KEY) || '';
+    if (raw !== lastRaw) {
+      lastRaw = raw;
+      callback(getLocalSettings());
+    }
   };
   poll();
   const interval = setInterval(poll, 2500);
