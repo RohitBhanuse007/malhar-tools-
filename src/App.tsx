@@ -11,7 +11,7 @@ import { CustomersPage } from './pages/Customers';
 import { AlertsPage } from './pages/Alerts';
 import { ReportsPage } from './pages/Reports';
 import { SettingsPage } from './pages/Settings';
-import { Spinner } from './components/ui/Spinner';
+import { SplashScreen } from './components/ui/SplashScreen';
 
 // Services
 import {
@@ -46,13 +46,16 @@ import {
   StockMovement,
   ShopSettings,
 } from './types';
-import { Wrench } from 'lucide-react';
 
 export const App: React.FC = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { t, language } = useLanguage();
 
   const [currentPage, setCurrentPage] = useState<string>('dashboard');
+
+  // Splash screen state for initial app launch and page reload/refresh
+  const [showSplash, setShowSplash] = useState(true);
+  const [isSplashExiting, setIsSplashExiting] = useState(false);
 
   // Real-time states
   const [products, setProducts] = useState<Product[]>([]);
@@ -68,6 +71,25 @@ export const App: React.FC = () => {
   const [isAddPurchaseOpen, setIsAddPurchaseOpen] = useState(false);
   const [isAddSaleOpen, setIsAddSaleOpen] = useState(false);
   const [preselectedProductId, setPreselectedProductId] = useState<string | undefined>(undefined);
+
+  // Splash screen animation timer on open / refresh
+  useEffect(() => {
+    const startTime = Date.now();
+    const minDisplayTime = 1400; // at least 1.4s of logo reveal animation
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      if (!authLoading && elapsed >= minDisplayTime) {
+        clearInterval(interval);
+        setIsSplashExiting(true);
+        setTimeout(() => {
+          setShowSplash(false);
+        }, 500); // 500ms smooth fade transition
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [authLoading]);
 
   // Subscribe to real-time updates when authenticated
   useEffect(() => {
@@ -93,19 +115,9 @@ export const App: React.FC = () => {
     };
   }, [isAuthenticated]);
 
-  // Loading screen during initial auth check
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-xl mb-4 animate-bounce">
-          <Wrench className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold text-white tracking-tight mb-2">
-          {language === 'mr' ? 'मल्हार टूल्स' : 'Malhar Tools'}
-        </h2>
-        <Spinner size="md" label={t('auth.authChecking')} className="text-white" />
-      </div>
-    );
+  // Animated logo splash screen on app open / refresh
+  if (showSplash || authLoading) {
+    return <SplashScreen isExiting={isSplashExiting} />;
   }
 
   // Unauthenticated user -> Login page

@@ -55,3 +55,49 @@
 .animate-slide-right {
   animation: slideRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Splash Screen & Logo Animations */
+@keyframes logoPulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.3), 0 0 50px rgba(217, 119, 6, 0.15);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px rgba(245, 158, 11, 0.6), 0 0 80px rgba(217, 119, 6, 0.35);
+  }
+}
+
+@keyframes gearSpinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(30%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-logo-pulse {
+  animation: logoPulseGlow 2.4s ease-in-out infinite;
+}
+
+.animate-gear-spin {
+  animation: gearSpinSlow 25s linear infinite;
+}
+
+.animate-loading-bar {
+  animation: loadingBar 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
