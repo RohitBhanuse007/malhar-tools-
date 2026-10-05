@@ -31,9 +31,9 @@ export const Button: React.FC<ButtonProps> = ({
     danger:
       'bg-rose-600 hover:bg-rose-700 text-white shadow-sm focus:ring-rose-500 active:bg-rose-800',
     outline:
-      'border border-amber-300/80 hover:bg-brand-50/80 text-slate-800 focus:ring-brand-400 active:bg-brand-100',
+      'border border-amber-300 bg-white hover:bg-amber-50 text-slate-900 font-semibold focus:ring-amber-400 active:bg-amber-100 shadow-2xs',
     ghost:
-      'text-slate-700 hover:bg-brand-100/60 hover:text-slate-950 focus:ring-amber-300',
+      'text-slate-700 hover:bg-amber-100/60 hover:text-slate-950 font-medium focus:ring-amber-300',
   };
 
   const sizeClasses = {

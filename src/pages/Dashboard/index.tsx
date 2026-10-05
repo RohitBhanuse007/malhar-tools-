@@ -83,26 +83,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           <Button
             variant="primary"
             size="sm"
-            leftIcon={<ShoppingCart className="w-4 h-4" />}
+            leftIcon={<ShoppingCart className="w-4 h-4 text-slate-950" />}
             onClick={onOpenAddSale}
-            className="shadow-md shadow-amber-500/20"
+            className="shadow-md shadow-amber-500/20 font-bold"
           >
             {t('dashboard.addSale')}
           </Button>
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<Truck className="w-4 h-4 text-amber-800" />}
+            leftIcon={<Truck className="w-4 h-4 text-amber-900" />}
             onClick={onOpenAddPurchase}
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
           >
             {t('dashboard.addPurchase')}
           </Button>
           <Button
             variant="outline"
             size="sm"
-            leftIcon={<Plus className="w-4 h-4 text-amber-400" />}
+            leftIcon={<Plus className="w-4 h-4 text-amber-800" />}
             onClick={onOpenAddProduct}
-            className="border-amber-500/30 text-amber-200 hover:bg-amber-500/10"
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
           >
             {t('dashboard.addProduct')}
           </Button>

@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<Plus className="w-3.5 h-3.5 text-brand-600" />}
+              leftIcon={<Plus className="w-3.5 h-3.5 text-amber-700" />}
               onClick={() => onQuickAction('product')}
             >
               {t('dashboard.addProduct')}
@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<Truck className="w-3.5 h-3.5 text-blue-600" />}
+              leftIcon={<Truck className="w-3.5 h-3.5 text-amber-800" />}
               onClick={() => onQuickAction('purchase')}
             >
               {t('dashboard.addPurchase')}
@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button
               variant="primary"
               size="sm"
-              leftIcon={<ShoppingCart className="w-3.5 h-3.5" />}
+              leftIcon={<ShoppingCart className="w-3.5 h-3.5 text-slate-950" />}
               onClick={() => onQuickAction('sale')}
             >
               {t('dashboard.addSale')}
