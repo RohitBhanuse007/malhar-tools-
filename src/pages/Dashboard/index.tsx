@@ -81,11 +81,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           <Button
-            variant="primary"
+            variant="outline"
             size="sm"
-            leftIcon={<ShoppingCart className="w-4 h-4 text-slate-950" />}
+            leftIcon={<ShoppingCart className="w-4 h-4 text-amber-800" />}
             onClick={onOpenAddSale}
-            className="shadow-md shadow-amber-500/20 font-bold"
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
           >
             {t('dashboard.addSale')}
           </Button>

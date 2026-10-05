@@ -61,9 +61,9 @@ export const Header: React.FC<HeaderProps> = ({
               {t('dashboard.addPurchase')}
             </Button>
             <Button
-              variant="primary"
+              variant="outline"
               size="sm"
-              leftIcon={<ShoppingCart className="w-3.5 h-3.5 text-slate-950" />}
+              leftIcon={<ShoppingCart className="w-3.5 h-3.5 text-amber-800" />}
               onClick={() => onQuickAction('sale')}
             >
               {t('dashboard.addSale')}
