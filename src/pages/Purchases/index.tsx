@@ -113,7 +113,7 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center gap-3">
+      <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs flex flex-col sm:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <Input
             placeholder="Search by product or supplier name..."
@@ -161,11 +161,11 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div className="hidden md:block bg-white rounded-2xl border border-amber-200/60 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                     <th className="py-3.5 px-4">{t('common.date')}</th>
                     <th className="py-3.5 px-4">{t('purchases.product')}</th>
                     <th className="py-3.5 px-4">{t('purchases.supplierName')}</th>
@@ -175,9 +175,9 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
                     <th className="py-3.5 px-4">{t('purchases.paymentStatus')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm">
+                <tbody className="divide-y divide-amber-100/60 text-sm">
                   {filteredPurchases.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={p.id} className="hover:bg-amber-50/40 transition-colors">
                       <td className="py-3.5 px-4 font-mono text-xs text-slate-600">
                         {formatDate(p.date)}
                       </td>
@@ -194,7 +194,7 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
                           )}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-center font-bold text-blue-600 font-mono">
+                      <td className="py-3.5 px-4 text-center font-bold text-amber-800 font-mono">
                         +{p.quantity}
                       </td>
                       <td className="py-3.5 px-4 text-right font-mono text-xs text-slate-600">
@@ -218,7 +218,7 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
             {filteredPurchases.map((p) => (
               <div
                 key={p.id}
-                className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs space-y-2.5"
+                className="bg-white rounded-xl p-4 border border-amber-200/60 shadow-xs space-y-2.5"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -230,7 +230,7 @@ export const PurchasesPage: React.FC<PurchasesPageProps> = ({
                   <PaymentStatusBadge status={p.paymentStatus} />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 py-2 border-y border-slate-100 text-xs">
+                <div className="grid grid-cols-3 gap-2 py-2 border-y border-amber-100/80 text-xs">
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-semibold">
                       Added Qty

@@ -25,15 +25,15 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-brand-600 hover:bg-brand-700 text-white shadow-sm focus:ring-brand-500 active:bg-brand-800',
+      'bg-brand-400 hover:bg-brand-500 text-slate-950 font-semibold shadow-xs focus:ring-brand-400 active:bg-brand-600',
     secondary:
-      'bg-slate-100 hover:bg-slate-200 text-slate-800 focus:ring-slate-400 active:bg-slate-300',
+      'bg-amber-100/70 hover:bg-amber-200/80 text-amber-950 focus:ring-amber-300 active:bg-amber-300/80',
     danger:
       'bg-rose-600 hover:bg-rose-700 text-white shadow-sm focus:ring-rose-500 active:bg-rose-800',
     outline:
-      'border border-slate-300 hover:bg-slate-50 text-slate-700 focus:ring-brand-500 active:bg-slate-100',
+      'border border-amber-300/80 hover:bg-brand-50/80 text-slate-800 focus:ring-brand-400 active:bg-brand-100',
     ghost:
-      'text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-400',
+      'text-slate-700 hover:bg-brand-100/60 hover:text-slate-950 focus:ring-amber-300',
   };
 
   const sizeClasses = {

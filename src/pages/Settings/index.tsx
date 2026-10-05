@@ -86,12 +86,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      <div className="flex items-center gap-2 border-b border-amber-200/60">
         <button
           onClick={() => setActiveTab('shop')}
           className={`flex items-center gap-2 py-3 px-4 border-b-2 text-sm font-semibold transition-all ${
             activeTab === 'shop'
-              ? 'border-brand-600 text-brand-700'
+              ? 'border-amber-500 text-amber-800'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -103,7 +103,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           onClick={() => setActiveTab('app')}
           className={`flex items-center gap-2 py-3 px-4 border-b-2 text-sm font-semibold transition-all ${
             activeTab === 'app'
-              ? 'border-brand-600 text-brand-700'
+              ? 'border-amber-500 text-amber-800'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -115,7 +115,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           onClick={() => setActiveTab('firebase')}
           className={`flex items-center gap-2 py-3 px-4 border-b-2 text-sm font-semibold transition-all ${
             activeTab === 'firebase'
-              ? 'border-brand-600 text-brand-700'
+              ? 'border-amber-500 text-amber-800'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -259,7 +259,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                   rows={2}
                   value={categoriesInput}
                   onChange={(e) => setCategoriesInput(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500"
+                  className="w-full rounded-lg border border-amber-200/80 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-500"
                   placeholder="Hand Tools, Power Tools, Fasteners, Plumbing..."
                 />
                 <p className="text-xs text-slate-500 mt-1">
@@ -333,7 +333,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             variant="primary"
             leftIcon={<Save className="w-4 h-4" />}
             isLoading={isSaving}
-            className="shadow-sm shadow-brand-600/30"
+            className="shadow-sm shadow-amber-500/20"
           >
             {t('common.save')} {t('nav.settings')}
           </Button>

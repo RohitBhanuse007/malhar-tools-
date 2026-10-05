@@ -63,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="flex flex-col h-full bg-slate-900 text-slate-200">
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800 flex items-center gap-3.5">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 flex items-center justify-center text-slate-950 shadow-md shrink-0">
           {shopSettings?.logoUrl ? (
             <img
               src={shopSettings.logoUrl}
@@ -71,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="w-10 h-10 rounded-xl object-contain p-1"
             />
           ) : (
-            <Wrench className="w-5 h-5 text-white" />
+            <Wrench className="w-5 h-5 text-slate-950" />
           )}
         </div>
         <div className="min-w-0 flex-1">
@@ -116,13 +116,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-colors text-left group ${
                 isActive
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-brand-400 text-slate-950 font-bold shadow-sm'
+                  : 'text-slate-300 hover:bg-slate-800 hover:text-amber-200'
               }`}
             >
               <Icon
                 className={`w-5 h-5 shrink-0 transition-colors ${
-                  isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                  isActive ? 'text-slate-950' : 'text-slate-400 group-hover:text-amber-300'
                 }`}
               />
               <span className="flex-1 truncate">{item.label}</span>
@@ -130,8 +130,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span
                   className={`px-2 py-0.5 text-xs rounded-full font-bold ${
                     isActive
-                      ? 'bg-white text-brand-700'
-                      : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                      ? 'bg-slate-950 text-brand-300'
+                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                   }`}
                 >
                   {item.badge}
@@ -154,7 +154,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => setLanguage('en')}
               className={`py-1.5 rounded-lg transition-all text-center ${
                 language === 'en'
-                  ? 'bg-brand-600 text-white shadow-xs'
+                  ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -164,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => setLanguage('mr')}
               className={`py-1.5 rounded-lg transition-all text-center ${
                 language === 'mr'
-                  ? 'bg-brand-600 text-white shadow-xs'
+                  ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >

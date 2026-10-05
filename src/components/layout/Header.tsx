@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   const { language, setLanguage, t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-20 bg-faint-50/95 backdrop-blur-md border-b border-amber-200/60 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
       {/* Left section: mobile hamburger + titles */}
       <div className="flex items-center gap-3 min-w-0">
         <button
@@ -74,10 +74,10 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Quick language toggle pill */}
         <button
           onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-amber-200/80 hover:bg-amber-100/60 text-slate-800 bg-white/80 transition-colors shadow-2xs"
           title="Switch Language"
         >
-          <Globe className="w-3.5 h-3.5 text-brand-600" />
+          <Globe className="w-3.5 h-3.5 text-amber-600" />
           <span>{language === 'en' ? 'मराठी' : 'English'}</span>
         </button>
       </div>

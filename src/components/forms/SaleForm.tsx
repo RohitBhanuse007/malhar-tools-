@@ -222,17 +222,17 @@ export const SaleForm: React.FC<SaleFormProps> = ({
       </div>
 
       {/* Customer Linking / Credit Option */}
-      <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+      <div className="p-4 bg-amber-50/40 border border-amber-200/70 rounded-xl space-y-3">
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
             {t('sales.linkToCustomer')}
           </label>
-          <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-brand-700">
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-amber-800">
             <input
               type="checkbox"
               checked={isCreditSale}
               onChange={(e) => setIsCreditSale(e.target.checked)}
-              className="rounded text-brand-600 focus:ring-brand-500 w-4 h-4"
+              className="rounded text-amber-500 focus:ring-amber-400 w-4 h-4"
             />
             <span>{t('sales.isCreditSale')}</span>
           </label>
@@ -259,7 +259,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         />
 
         {isCreditSale && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-amber-200/60">
             <Input
               label={t('sales.initialPaid')}
               type="number"
@@ -290,12 +290,12 @@ export const SaleForm: React.FC<SaleFormProps> = ({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder={t('sales.notesPlaceholder')}
-          className="w-full rounded-lg border border-slate-300 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500 placeholder:text-slate-400"
+          className="w-full rounded-lg border border-amber-200/80 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-500 placeholder:text-slate-400"
         />
       </div>
 
       {/* Actions */}
-      <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+      <div className="pt-3 flex items-center justify-end gap-3 border-t border-amber-100/80">
         <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
           {t('common.cancel')}
         </Button>

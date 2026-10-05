@@ -42,7 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-faint-50 flex flex-col lg:flex-row">
       {/* Sidebar */}
       <Sidebar
         currentPage={currentPage}

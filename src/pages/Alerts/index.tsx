@@ -75,7 +75,7 @@ export const AlertsPage: React.FC<AlertsPageProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 print:hidden">
+      <div className="flex items-center gap-2 border-b border-amber-200/60 print:hidden">
         <button
           onClick={() => setActiveTab('low')}
           className={`flex items-center gap-2 py-3 px-4 border-b-2 text-sm font-semibold transition-all ${
@@ -115,10 +115,10 @@ export const AlertsPage: React.FC<AlertsPageProps> = ({
           description="Hardware items will automatically appear here when current stock reaches or dips below alert limits."
         />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden print:border-none print:shadow-none">
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-xs overflow-hidden print:border-none print:shadow-none">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider print:bg-white print:border-b-2">
+              <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase tracking-wider print:bg-white print:border-b-2">
                 <th className="py-3 px-4">#</th>
                 <th className="py-3 px-4">{t('products.name')}</th>
                 <th className="py-3 px-4">{t('products.category')}</th>
@@ -128,9 +128,9 @@ export const AlertsPage: React.FC<AlertsPageProps> = ({
                 <th className="py-3 px-4 text-right print:hidden">{t('common.actions')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm print:divide-slate-200">
+            <tbody className="divide-y divide-amber-100/60 text-sm print:divide-slate-200">
               {currentList.map((p, idx) => (
-                <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
+                <tr key={p.id} className="hover:bg-amber-50/40 transition-colors">
                   <td className="py-3 px-4 text-xs font-mono text-slate-400">{idx + 1}</td>
                   <td className="py-3 px-4 font-bold text-slate-900">
                     <div>

@@ -210,12 +210,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           value={formData.description}
           onChange={handleChange}
           placeholder="Brand, size, specification or storage rack location..."
-          className="w-full rounded-lg border border-slate-300 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500 placeholder:text-slate-400"
+          className="w-full rounded-lg border border-amber-200/80 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-500 placeholder:text-slate-400"
         />
       </div>
 
       {/* Form Action Buttons */}
-      <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+      <div className="pt-3 flex items-center justify-end gap-3 border-t border-amber-100/80">
         <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
           {t('common.cancel')}
         </Button>

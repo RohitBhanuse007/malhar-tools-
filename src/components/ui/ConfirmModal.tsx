@@ -39,7 +39,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
       <div className="flex min-h-full items-center justify-center p-4 text-center">
         <div
-          className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 max-w-md w-full border border-slate-200 p-6"
+          className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 max-w-md w-full border border-amber-200/80 p-6"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start gap-4">

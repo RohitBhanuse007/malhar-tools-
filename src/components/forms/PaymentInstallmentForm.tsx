@@ -74,7 +74,7 @@ export const PaymentInstallmentForm: React.FC<PaymentInstallmentFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Customer summary card */}
-      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+      <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-200/70 flex items-center justify-between">
         <div>
           <h4 className="font-bold text-slate-900 text-sm">{customer.name}</h4>
           <p className="text-xs text-slate-500">{customer.contactNumber}</p>
@@ -94,7 +94,7 @@ export const PaymentInstallmentForm: React.FC<PaymentInstallmentFormProps> = ({
           <button
             type="button"
             onClick={() => setAmount(String(remainingBalance))}
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 underline"
+            className="text-xs font-semibold text-amber-700 hover:text-amber-800 underline"
           >
             Pay Full Balance (₹{remainingBalance})
           </button>
@@ -159,12 +159,12 @@ export const PaymentInstallmentForm: React.FC<PaymentInstallmentFormProps> = ({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Installment payment notes..."
-          className="w-full rounded-lg border border-slate-300 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500 placeholder:text-slate-400"
+          className="w-full rounded-lg border border-amber-200/80 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-500 placeholder:text-slate-400"
         />
       </div>
 
       {/* Actions */}
-      <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+      <div className="pt-3 flex items-center justify-end gap-3 border-t border-amber-100/80">
         <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
           {t('common.cancel')}
         </Button>

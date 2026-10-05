@@ -47,7 +47,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden">
       {/* Background glowing gradients */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Language switcher in header corner */}
       <div className="absolute top-6 right-6">
@@ -55,7 +55,7 @@ export const LoginPage: React.FC = () => {
           onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
           className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold transition-colors"
         >
-          <Globe className="w-3.5 h-3.5 text-brand-400" />
+          <Globe className="w-3.5 h-3.5 text-amber-400" />
           <span>{language === 'en' ? 'मराठी' : 'English'}</span>
         </button>
       </div>
@@ -63,8 +63,8 @@ export const LoginPage: React.FC = () => {
       <div className="max-w-md w-full relative z-10">
         {/* Logo and Shop Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 shadow-xl mb-4 border border-emerald-400/30">
-            <Wrench className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 shadow-xl mb-4 border border-amber-300/40 text-slate-950">
+            <Wrench className="w-8 h-8 text-slate-950" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {language === 'mr' ? 'मल्हार टूल्स' : 'Malhar Tools'}
@@ -122,7 +122,7 @@ export const LoginPage: React.FC = () => {
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full mt-2 font-semibold shadow-lg shadow-brand-600/30"
+              className="w-full mt-2 font-bold shadow-lg shadow-amber-500/20"
               isLoading={isLoading}
             >
               {isLoading ? t('auth.loggingIn') : t('auth.loginButton')}
@@ -131,7 +131,7 @@ export const LoginPage: React.FC = () => {
 
           {/* Quick notice regarding Firebase config */}
           <div className="mt-6 pt-5 border-t border-slate-700/60 flex items-start gap-2.5 text-xs text-slate-400">
-            <Info className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
+            <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <span>
               {isFirebaseConnected
                 ? 'Connected to Firebase Authentication.'

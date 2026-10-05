@@ -8,17 +8,23 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          950: '#052e16',
+          50: '#fefce8',   // faint pale yellow
+          100: '#fef9c3',  // soft light yellow
+          200: '#fef08a',  // mild warm yellow
+          300: '#fde047',  // golden accent yellow
+          400: '#facc15',  // vibrant yellow
+          500: '#eab308',  // primary hardware yellow
+          600: '#ca8a04',  // rich amber gold
+          700: '#a16207',  // deep warm bronze
+          800: '#854d0e',
+          900: '#713f12',
+          950: '#422006',
+        },
+        faint: {
+          50: '#fffdf2',   // pleasant faint yellow canvas
+          100: '#fefce8',  // pale yellow surface
+          200: '#fef9c3',  // light yellow border
+          300: '#fef08a',
         },
         slate: {
           850: '#151f30',

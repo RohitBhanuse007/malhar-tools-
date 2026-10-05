@@ -149,7 +149,7 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 flex items-center justify-between shadow-xs">
+        <div className="bg-white border border-amber-200/60 rounded-2xl p-5 flex items-center justify-between shadow-xs">
           <div>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
               Customers With Pending Balance
@@ -162,14 +162,14 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
               Customers currently carrying an active balance
             </p>
           </div>
-          <div className="p-3 bg-slate-100 text-slate-700 rounded-xl">
+          <div className="p-3 bg-amber-100/80 text-amber-800 rounded-xl">
             <Users className="w-6 h-6" />
           </div>
         </div>
       </div>
 
       {/* Search & Dues Only Toggle */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="relative flex-1 w-full">
           <Input
             placeholder="Search customer by name or contact number..."
@@ -179,12 +179,12 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
           />
         </div>
 
-        <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 bg-slate-50 px-3.5 py-2.5 rounded-lg border border-slate-200 hover:bg-slate-100/80 select-none shrink-0 w-full sm:w-auto">
+        <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 bg-amber-50/50 px-3.5 py-2.5 rounded-lg border border-amber-200/60 hover:bg-amber-100/60 select-none shrink-0 w-full sm:w-auto">
           <input
             type="checkbox"
             checked={onlyPendingFilter}
             onChange={(e) => setOnlyPendingFilter(e.target.checked)}
-            className="rounded text-brand-600 focus:ring-brand-500 w-4 h-4"
+            className="rounded text-amber-500 focus:ring-amber-400 w-4 h-4"
           />
           <span>{t('customers.filterPendingOnly')}</span>
         </label>
@@ -207,7 +207,7 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
               <div
                 key={c.id}
                 className={`bg-white rounded-2xl border p-5 shadow-xs transition-all flex flex-col justify-between ${
-                  hasDues ? 'border-amber-200/90 hover:border-amber-300' : 'border-slate-200/80'
+                  hasDues ? 'border-amber-300 hover:border-amber-400' : 'border-amber-200/60 hover:border-amber-300'
                 }`}
               >
                 <div>
@@ -238,7 +238,7 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
                   </div>
 
                   {/* Financial Breakdown */}
-                  <div className="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2 text-xs">
+                  <div className="mt-4 p-3.5 rounded-xl bg-amber-50/40 border border-amber-100/80 space-y-2 text-xs">
                     <div className="flex justify-between text-slate-500">
                       <span>{t('customers.totalPurchases')}:</span>
                       <span className="font-mono font-medium text-slate-800">
@@ -251,7 +251,7 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
                         {formatCurrency(c.totalPaid)}
                       </span>
                     </div>
-                    <div className="pt-2 border-t border-slate-200 flex justify-between font-bold">
+                    <div className="pt-2 border-t border-amber-200/60 flex justify-between font-bold">
                       <span className="text-slate-700">{t('customers.remainingBalance')}:</span>
                       <span
                         className={`font-mono text-sm ${
@@ -265,7 +265,7 @@ export const CustomersPage: React.FC<CustomersPageProps> = ({
                 </div>
 
                 {/* Card Action Buttons */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                <div className="mt-4 pt-3 border-t border-amber-100/80 flex items-center justify-between gap-2">
                   <Button
                     variant="outline"
                     size="sm"

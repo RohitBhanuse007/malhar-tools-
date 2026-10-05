@@ -122,12 +122,12 @@ export const SalesPage: React.FC<SalesPageProps> = ({
             </p>
             <span className="text-xs text-slate-400">{filteredSales.length} bills</span>
           </div>
-          <div className="p-3 rounded-xl bg-brand-50 text-brand-600">
+          <div className="p-3 rounded-xl bg-amber-100/80 text-amber-800">
             <ShoppingCart className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
               Cash Collection (रोख)
@@ -142,7 +142,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
               UPI / Online (यूपीआय)
@@ -159,7 +159,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center gap-3">
+      <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs flex flex-col sm:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <Input
             placeholder="Search by product name or customer..."
@@ -181,7 +181,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
           <select
             value={paymentModeFilter}
             onChange={(e) => setPaymentModeFilter(e.target.value)}
-            className="w-full text-xs font-medium py-2.5 px-3 rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full text-xs font-medium py-2.5 px-3 rounded-lg border border-amber-200/80 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-200"
           >
             <option value="">All Payment Modes</option>
             <option value="Cash">Cash (रोख)</option>
@@ -222,11 +222,11 @@ export const SalesPage: React.FC<SalesPageProps> = ({
       ) : (
         <>
           {/* Desktop Table View */}
-          <div className="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div className="hidden md:block bg-white rounded-2xl border border-amber-200/60 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                     <th className="py-3.5 px-4">{t('common.date')}</th>
                     <th className="py-3.5 px-4">{t('sales.product')}</th>
                     <th className="py-3.5 px-4">{t('sales.customerName')}</th>
@@ -236,9 +236,9 @@ export const SalesPage: React.FC<SalesPageProps> = ({
                     <th className="py-3.5 px-4">{t('sales.paymentMode')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm">
+                <tbody className="divide-y divide-amber-100/60 text-sm">
                   {filteredSales.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={s.id} className="hover:bg-amber-50/40 transition-colors">
                       <td className="py-3.5 px-4 font-mono text-xs text-slate-600">
                         {formatDate(s.date)}
                       </td>
@@ -284,7 +284,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
             {filteredSales.map((s) => (
               <div
                 key={s.id}
-                className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs space-y-2.5"
+                className="bg-white rounded-xl p-4 border border-amber-200/60 shadow-xs space-y-2.5"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -304,7 +304,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 py-2 border-y border-slate-100 text-xs">
+                <div className="grid grid-cols-3 gap-2 py-2 border-y border-amber-100/80 text-xs">
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-semibold">
                       Qty Sold

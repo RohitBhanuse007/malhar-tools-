@@ -17,8 +17,8 @@ export const StatCard: React.FC<StatCardProps> = ({
   value,
   subtext,
   icon,
-  iconBgColor = 'bg-brand-50',
-  iconTextColor = 'text-brand-600',
+  iconBgColor = 'bg-amber-100/80',
+  iconTextColor = 'text-amber-800',
   onClick,
   badge,
   isAlert = false,
@@ -28,8 +28,8 @@ export const StatCard: React.FC<StatCardProps> = ({
       onClick={onClick}
       className={`relative overflow-hidden rounded-2xl bg-white p-5 border transition-all duration-200 ${
         isAlert
-          ? 'border-amber-300 ring-1 ring-amber-200/50 hover:shadow-md'
-          : 'border-slate-200/80 shadow-xs hover:border-slate-300 hover:shadow-md'
+          ? 'border-amber-400 ring-2 ring-amber-200/60 shadow-sm'
+          : 'border-amber-200/60 shadow-xs hover:border-amber-300 hover:shadow-md'
       } ${onClick ? 'cursor-pointer' : ''}`}
     >
       <div className="flex items-start justify-between">

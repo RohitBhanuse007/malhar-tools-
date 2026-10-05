@@ -70,7 +70,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Quick Action Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 rounded-2xl p-5 sm:p-6 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-stone-900 via-slate-900 to-stone-900 border border-amber-500/20 rounded-2xl p-5 sm:p-6 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight">
             {t('dashboard.title')}
@@ -85,14 +85,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             size="sm"
             leftIcon={<ShoppingCart className="w-4 h-4" />}
             onClick={onOpenAddSale}
-            className="shadow-md shadow-brand-600/30"
+            className="shadow-md shadow-amber-500/20"
           >
             {t('dashboard.addSale')}
           </Button>
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<Truck className="w-4 h-4 text-blue-600" />}
+            leftIcon={<Truck className="w-4 h-4 text-amber-800" />}
             onClick={onOpenAddPurchase}
           >
             {t('dashboard.addPurchase')}
@@ -100,9 +100,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           <Button
             variant="outline"
             size="sm"
-            leftIcon={<Plus className="w-4 h-4 text-brand-400" />}
+            leftIcon={<Plus className="w-4 h-4 text-amber-400" />}
             onClick={onOpenAddProduct}
-            className="border-slate-700 text-slate-200 hover:bg-slate-800"
+            className="border-amber-500/30 text-amber-200 hover:bg-amber-500/10"
           >
             {t('dashboard.addProduct')}
           </Button>
@@ -116,8 +116,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           value={formatCurrency(todaySalesAmount)}
           subtext={`${todaySales.length} transactions today`}
           icon={<TrendingUp className="w-6 h-6" />}
-          iconBgColor="bg-emerald-50"
-          iconTextColor="text-emerald-600"
+          iconBgColor="bg-amber-100"
+          iconTextColor="text-amber-800"
           onClick={() => onNavigate('sales')}
         />
 
@@ -126,8 +126,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           value={formatCurrency(todayPurchasesAmount)}
           subtext={`${todayPurchases.length} stock-in arrivals`}
           icon={<Truck className="w-6 h-6" />}
-          iconBgColor="bg-blue-50"
-          iconTextColor="text-blue-600"
+          iconBgColor="bg-amber-50"
+          iconTextColor="text-amber-700"
           onClick={() => onNavigate('purchases')}
         />
 
@@ -136,8 +136,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           value={formatCurrency(pendingCustomerPayments)}
           subtext="Total customer dues owed"
           icon={<Users className="w-6 h-6" />}
-          iconBgColor="bg-amber-50"
-          iconTextColor="text-amber-600"
+          iconBgColor="bg-orange-100/70"
+          iconTextColor="text-orange-800"
           onClick={() => onNavigate('customers')}
         />
 
@@ -146,8 +146,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           value={totalProducts}
           subtext={`${currentStockUnits} total stock items`}
           icon={<Boxes className="w-6 h-6" />}
-          iconBgColor="bg-slate-100"
-          iconTextColor="text-slate-700"
+          iconBgColor="bg-yellow-100"
+          iconTextColor="text-yellow-800"
           onClick={() => onNavigate('products')}
         />
       </div>
@@ -159,8 +159,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           value={currentStockUnits}
           subtext="Across all hardware items"
           icon={<Layers className="w-6 h-6" />}
-          iconBgColor="bg-sky-50"
-          iconTextColor="text-sky-600"
+          iconBgColor="bg-amber-100/80"
+          iconTextColor="text-amber-800"
           onClick={() => onNavigate('products')}
         />
 

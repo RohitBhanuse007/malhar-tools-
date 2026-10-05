@@ -142,13 +142,13 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
       </div>
 
       {/* Report Selection Navigation Tabs */}
-      <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-xs flex flex-wrap gap-1.5 print:hidden">
+      <div className="bg-white p-2 rounded-2xl border border-amber-200/60 shadow-xs flex flex-wrap gap-1.5 print:hidden">
         <button
           onClick={() => setActiveReport('daily_sales')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'daily_sales'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.dailySales')}
@@ -157,8 +157,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('sales_history')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'sales_history'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.salesHistory')}
@@ -167,8 +167,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('purchase_history')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'purchase_history'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.purchaseHistory')}
@@ -177,8 +177,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('stock_movement')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'stock_movement'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.stockMovement')}
@@ -187,8 +187,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('pending_payments')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'pending_payments'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.pendingPayments')}
@@ -197,8 +197,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('low_stock')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'low_stock'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.lowStockReport')}
@@ -207,8 +207,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           onClick={() => setActiveReport('out_of_stock')}
           className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
             activeReport === 'out_of_stock'
-              ? 'bg-brand-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-brand-400 text-slate-950 font-bold shadow-xs'
+              : 'text-slate-600 hover:bg-amber-100/60'
           }`}
         >
           {t('reports.outOfStockReport')}
@@ -220,7 +220,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
         activeReport === 'sales_history' ||
         activeReport === 'purchase_history' ||
         activeReport === 'stock_movement') && (
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-1 sm:grid-cols-3 gap-3 print:hidden">
+        <div className="bg-white p-4 rounded-2xl border border-amber-200/60 shadow-xs grid grid-cols-1 sm:grid-cols-3 gap-3 print:hidden">
           <Input
             label={t('reports.fromDate')}
             type="date"
@@ -262,10 +262,10 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
               description="No sales matches the selected date range."
             />
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden shadow-xs">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
+                  <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase">
                     <th className="p-3.5">{t('common.date')}</th>
                     <th className="p-3.5">{t('sales.product')}</th>
                     <th className="p-3.5">{t('sales.customerName')}</th>
@@ -275,9 +275,9 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
                     <th className="p-3.5">{t('sales.paymentMode')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-amber-100/60">
                   {filteredDailySales.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/50">
+                    <tr key={s.id} className="hover:bg-amber-50/40">
                       <td className="p-3.5 font-mono text-xs">{formatDate(s.date)}</td>
                       <td className="p-3.5 font-bold text-slate-900">{s.productName}</td>
                       <td className="p-3.5 text-xs text-slate-600">{s.customerName || 'Walk-in'}</td>
@@ -317,10 +317,10 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
               description="No purchases match the selected date range."
             />
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden shadow-xs">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
+                  <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase">
                     <th className="p-3.5">{t('common.date')}</th>
                     <th className="p-3.5">{t('purchases.product')}</th>
                     <th className="p-3.5">{t('purchases.supplierName')}</th>
@@ -329,13 +329,13 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
                     <th className="p-3.5 text-right">{t('purchases.totalAmount')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-amber-100/60">
                   {filteredPurchases.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50/50">
+                    <tr key={p.id} className="hover:bg-amber-50/40">
                       <td className="p-3.5 font-mono text-xs">{formatDate(p.date)}</td>
                       <td className="p-3.5 font-bold text-slate-900">{p.productName}</td>
                       <td className="p-3.5 text-xs text-slate-600">{p.supplierName}</td>
-                      <td className="p-3.5 text-center font-mono font-bold text-blue-600">+{p.quantity}</td>
+                      <td className="p-3.5 text-center font-mono font-bold text-amber-800">+{p.quantity}</td>
                       <td className="p-3.5 text-right font-mono text-xs text-slate-600">
                         {formatCurrency(p.purchasePrice)}
                       </td>
@@ -361,10 +361,10 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
               description="No stock movements recorded in this timeframe."
             />
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden shadow-xs">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
+                  <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase">
                     <th className="p-3.5">{t('common.date')}</th>
                     <th className="p-3.5">{t('products.name')}</th>
                     <th className="p-3.5">{t('reports.movementType')}</th>
@@ -374,9 +374,9 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
                     <th className="p-3.5">{t('common.notes')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-amber-100/60">
                   {filteredMovements.map((m) => (
-                    <tr key={m.id} className="hover:bg-slate-50/50">
+                    <tr key={m.id} className="hover:bg-amber-50/40">
                       <td className="p-3.5 font-mono text-xs">{formatDate(m.date || m.createdAt)}</td>
                       <td className="p-3.5 font-bold text-slate-900">{m.productName}</td>
                       <td className="p-3.5 text-xs font-semibold">
@@ -425,10 +425,10 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
             </span>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden shadow-xs">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
+                <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase">
                   <th className="p-3.5">{t('customers.name')}</th>
                   <th className="p-3.5">{t('customers.contact')}</th>
                   <th className="p-3.5 text-right">{t('customers.totalPurchases')}</th>
@@ -436,9 +436,9 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
                   <th className="p-3.5 text-right">{t('customers.remainingBalance')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-amber-100/60">
                 {pendingCustomers.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50/50">
+                  <tr key={c.id} className="hover:bg-amber-50/40">
                     <td className="p-3.5 font-bold text-slate-900">{c.name}</td>
                     <td className="p-3.5 text-xs text-slate-600">{c.contactNumber}</td>
                     <td className="p-3.5 text-right font-mono text-xs">
@@ -460,10 +460,10 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
 
       {/* 5. Low Stock & Out of Stock Reports */}
       {(activeReport === 'low_stock' || activeReport === 'out_of_stock') && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden shadow-xs">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
+              <tr className="bg-amber-50/60 border-b border-amber-200/60 text-[11px] font-bold text-slate-600 uppercase">
                 <th className="p-3.5">{t('products.name')}</th>
                 <th className="p-3.5">{t('products.category')}</th>
                 <th className="p-3.5 text-center">{t('alerts.currentStock')}</th>
@@ -471,9 +471,9 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
                 <th className="p-3.5 text-right">{t('products.purchasePrice')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-amber-100/60">
               {(activeReport === 'low_stock' ? lowStockList : outOfStockList).map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/50">
+                <tr key={p.id} className="hover:bg-amber-50/40">
                   <td className="p-3.5 font-bold text-slate-900">{p.name}</td>
                   <td className="p-3.5 text-xs text-slate-600">{p.category}</td>
                   <td className="p-3.5 text-center font-mono font-bold text-rose-600">
