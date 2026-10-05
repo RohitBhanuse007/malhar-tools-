@@ -56,24 +56,15 @@
   animation: slideRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Splash Screen & Logo Animations */
+/* Splash Screen & Logo Animation */
 @keyframes logoPulseGlow {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 25px rgba(245, 158, 11, 0.3), 0 0 50px rgba(217, 119, 6, 0.15);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.25), 0 0 40px rgba(217, 119, 6, 0.1);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 45px rgba(245, 158, 11, 0.6), 0 0 80px rgba(217, 119, 6, 0.35);
-  }
-}
-
-@keyframes gearSpinSlow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+    transform: scale(1.04);
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.45), 0 0 60px rgba(217, 119, 6, 0.25);
   }
 }
 
@@ -90,14 +81,11 @@
 }
 
 .animate-logo-pulse {
-  animation: logoPulseGlow 2.4s ease-in-out infinite;
-}
-
-.animate-gear-spin {
-  animation: gearSpinSlow 25s linear infinite;
+  animation: logoPulseGlow 2.2s ease-in-out infinite;
 }
 
 .animate-loading-bar {
-  animation: loadingBar 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: loadingBar 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
 
