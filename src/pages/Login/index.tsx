@@ -63,13 +63,17 @@ export const LoginPage: React.FC = () => {
       <div className="max-w-md w-full relative z-10">
         {/* Logo and Shop Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 shadow-xl mb-4 border border-amber-300/40 text-slate-950">
-            <Wrench className="w-8 h-8 text-slate-950" />
+          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-black border border-amber-500/40 shadow-2xl mb-4 max-w-[180px]">
+            <img src="/logo.png" alt="Malhar Tools Logo" className="w-full h-auto object-contain" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {language === 'mr' ? 'मल्हार टूल्स' : 'Malhar Tools'}
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <span className="text-amber-400">MALHAR </span>
+            <span className="text-white">TOOLS</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs uppercase tracking-widest text-amber-200/90 font-semibold mt-1">
+            {language === 'mr' ? 'हार्डवेअर • टूल्स • स्पेअर्स' : 'HARDWARE • TOOLS • SPARES'}
+          </p>
+          <p className="text-xs text-slate-400 mt-2">
             {t('auth.loginSubtitle')}
           </p>
         </div>

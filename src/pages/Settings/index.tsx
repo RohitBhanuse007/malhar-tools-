@@ -188,14 +188,32 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 />
               </div>
 
-              <Input
-                label={t('settings.logoUrl')}
-                name="logoUrl"
-                value={formData.logoUrl || ''}
-                onChange={handleChange}
-                placeholder="https://..."
-                helperText="Paste direct image URL for your shop brand logo"
-              />
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                  {t('settings.logoUrl')}
+                </label>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="w-16 h-16 rounded-xl bg-black border border-amber-500/40 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+                    <img
+                      src={formData.logoUrl || '/logo.png'}
+                      alt="Brand Logo Preview"
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/logo.png';
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1 w-full">
+                    <Input
+                      name="logoUrl"
+                      value={formData.logoUrl || ''}
+                      onChange={handleChange}
+                      placeholder="/logo.png or https://..."
+                      helperText="Official Malhar Tools logo is configured as default (/logo.png)"
+                    />
+                  </div>
+                </div>
+              </div>
             </CardBody>
           </Card>
         )}

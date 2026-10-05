@@ -1,7 +1,7 @@
 export const mr = {
   common: {
     appName: 'मल्हार टूल्स',
-    shopSubtitle: 'दुकान व्यवस्थापन प्रणाली',
+    shopSubtitle: 'हार्डवेअर • टूल्स • स्पेअर्स',
     loading: 'लोड होत आहे...',
     saving: 'जतन करत आहे...',
     processing: 'प्रक्रिया सुरू आहे...',

@@ -28,6 +28,9 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Menu className="w-5 h-5" />
         </button>
+        <div className="lg:hidden w-8 h-8 rounded-lg bg-black border border-amber-500/40 p-0.5 shrink-0 flex items-center justify-center overflow-hidden">
+          <img src="/logo.png" alt="Malhar Tools Logo" className="w-full h-full object-contain" />
+        </div>
         <div className="min-w-0">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate tracking-tight">
             {pageTitle}

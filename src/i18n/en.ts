@@ -1,7 +1,7 @@
 export const en = {
   common: {
     appName: 'Malhar Tools',
-    shopSubtitle: 'Shop Management System',
+    shopSubtitle: 'HARDWARE • TOOLS • SPARES',
     loading: 'Loading...',
     saving: 'Saving...',
     processing: 'Processing...',

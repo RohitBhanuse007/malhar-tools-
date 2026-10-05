@@ -17,7 +17,7 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   address: 'Shop No. 4, Main Hardware Market, Station Road, Maharashtra',
   contactNumber: '+91 98765 43210',
   email: 'owner@malhartools.com',
-  logoUrl: '',
+  logoUrl: '/logo.png',
   defaultLanguage: 'en',
   defaultLowStockThreshold: 5,
   customUnits: ['Piece', 'Box', 'Kg', 'Meter', 'Set', 'Pair', 'Roll', 'Packet', 'Litre'],
@@ -38,7 +38,12 @@ function getLocalSettings(): ShopSettings {
   try {
     const raw = localStorage.getItem(LOCAL_SETTINGS_KEY);
     if (raw) {
-      return { ...DEFAULT_SHOP_SETTINGS, ...JSON.parse(raw) };
+      const parsed = JSON.parse(raw);
+      return {
+        ...DEFAULT_SHOP_SETTINGS,
+        ...parsed,
+        logoUrl: parsed.logoUrl || '/logo.png',
+      };
     }
   } catch {
     // fallback

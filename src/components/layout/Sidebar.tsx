@@ -62,23 +62,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <div className="flex flex-col h-full bg-slate-900 text-slate-200">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800 flex items-center gap-3.5">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 flex items-center justify-center text-slate-950 shadow-md shrink-0">
-          {shopSettings?.logoUrl ? (
-            <img
-              src={shopSettings.logoUrl}
-              alt="Logo"
-              className="w-10 h-10 rounded-xl object-contain p-1"
-            />
-          ) : (
-            <Wrench className="w-5 h-5 text-slate-950" />
-          )}
+      <div className="p-4 border-b border-slate-800 flex items-center gap-3">
+        <div className="w-11 h-11 rounded-xl bg-black border border-amber-500/40 flex items-center justify-center p-1 shadow-lg shrink-0 overflow-hidden">
+          <img
+            src={shopSettings?.logoUrl || '/logo.png'}
+            alt="Malhar Tools Logo"
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="font-bold text-white text-base truncate tracking-tight">
-            {shopDisplayName}
-          </h1>
-          <p className="text-xs text-slate-400 truncate">
+          <div className="flex items-center gap-1.5 leading-tight">
+            <span className="font-black text-amber-400 text-sm tracking-tight uppercase">
+              {language === 'mr' ? 'मल्हार' : 'MALHAR'}
+            </span>
+            <span className="font-black text-white text-sm tracking-tight uppercase">
+              {language === 'mr' ? 'टूल्स' : 'TOOLS'}
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate tracking-wide font-semibold mt-0.5 uppercase">
             {t('common.shopSubtitle')}
           </p>
         </div>

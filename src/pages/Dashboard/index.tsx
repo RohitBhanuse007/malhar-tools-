@@ -36,6 +36,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   purchases,
   sales,
   customers,
+  shopSettings,
   onNavigate,
   onOpenAddProduct,
   onOpenAddPurchase,
@@ -71,13 +72,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     <div className="space-y-6">
       {/* Quick Action Banner */}
       <div className="bg-gradient-to-r from-stone-900 via-slate-900 to-stone-900 border border-amber-500/20 rounded-2xl p-5 sm:p-6 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold tracking-tight">
-            {t('dashboard.title')}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1">
-            {t('dashboard.subtitle')}
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-xl bg-black border border-amber-500/40 p-1 shrink-0 overflow-hidden shadow-lg flex items-center justify-center">
+            <img src={shopSettings?.logoUrl || '/logo.png'} alt="Malhar Tools Logo" className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <h2 className="text-xl font-extrabold tracking-tight flex items-center gap-1.5">
+              <span className="text-amber-400">MALHAR</span>
+              <span className="text-white">TOOLS</span>
+            </h2>
+            <p className="text-xs uppercase tracking-wider text-amber-200/80 font-medium mt-0.5">
+              HARDWARE • TOOLS • SPARES
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           <Button

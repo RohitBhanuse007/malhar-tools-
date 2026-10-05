@@ -130,10 +130,16 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
 
       {/* Printable Sheet Header */}
       <div className="hidden print:block mb-6 border-b pb-4">
-        <h2 className="text-2xl font-black text-slate-900">{shopName}</h2>
-        <p className="text-sm text-slate-600">{shopSettings?.address || 'Hardware & Tools Merchant'}</p>
-        <p className="text-xs text-slate-500">Phone: {shopSettings?.contactNumber || ''}</p>
-        <div className="mt-4 flex justify-between items-center text-xs font-bold border-t pt-2">
+        <div className="flex items-center gap-4 mb-3">
+          <img src={shopSettings?.logoUrl || '/logo.png'} alt="Malhar Tools Logo" className="w-16 h-16 object-contain" />
+          <div>
+            <h2 className="text-2xl font-black text-slate-900">{shopName}</h2>
+            <p className="text-xs font-bold text-amber-700 tracking-wider uppercase">HARDWARE • TOOLS • SPARES</p>
+            <p className="text-xs text-slate-600">{shopSettings?.address || 'Hardware & Tools Merchant'}</p>
+            {shopSettings?.contactNumber && <p className="text-xs text-slate-500">Phone: {shopSettings.contactNumber}</p>}
+          </div>
+        </div>
+        <div className="mt-2 flex justify-between items-center text-xs font-bold border-t pt-2">
           <span>REPORT: {activeReport.toUpperCase().replace(/_/g, ' ')}</span>
           <span>
             RANGE: {fromDate} to {toDate} | PRINTED: {formatDate(new Date())}
