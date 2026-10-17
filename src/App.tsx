@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { useLanguage } from './context/LanguageContext';
+import { useTheme } from './context/ThemeContext';
 import { Layout } from './components/layout/Layout';
 import { LoginPage } from './pages/Login';
 import { DashboardPage } from './pages/Dashboard';
@@ -51,6 +52,7 @@ import {
 export const App: React.FC = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { t, language } = useLanguage();
+  const { setFontSettings } = useTheme();
 
   const [currentPage, setCurrentPage] = useState<string>('dashboard');
 
@@ -66,6 +68,13 @@ export const App: React.FC = () => {
   const [customerPayments, setCustomerPayments] = useState<CustomerPayment[]>([]);
   const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
   const [shopSettings, setShopSettings] = useState<ShopSettings>(DEFAULT_SHOP_SETTINGS);
+
+  // Keep theme font settings in sync with loaded shop settings
+  useEffect(() => {
+    if (shopSettings?.fontSettings) {
+      setFontSettings(shopSettings.fontSettings);
+    }
+  }, [shopSettings?.fontSettings, setFontSettings]);
 
   // Quick Action Modal states triggered across pages
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);

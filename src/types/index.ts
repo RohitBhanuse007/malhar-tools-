@@ -150,7 +150,20 @@ export interface ShopSettings {
   bankBranch?: string;
   invoicePrefix?: string;
   invoiceTerms?: string;
+  // Font & Appearance Theme Settings
+  fontSettings?: FontSettings;
   updatedAt?: any;
+}
+
+export type FontFamilyOption = 'Inter' | 'Poppins' | 'Roboto' | 'Arial';
+export type FontSizeOption = 'sm' | 'md' | 'lg';
+export type FontWeightOption = 'normal' | 'medium' | 'bold';
+
+export interface FontSettings {
+  fontFamily: FontFamilyOption;
+  fontSize: FontSizeOption;
+  fontWeight: FontWeightOption;
+  fontColor: string; // Hex color string, e.g., '#0f172a'
 }
 
 export interface DashboardStats {

@@ -2,40 +2,148 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --app-font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --app-font-size-base: 16px;
+  --app-font-color: #0f172a;
+  --app-heading-color: #020617;
+  --app-font-weight-body: 500;
+  --app-font-weight-heading: 800;
+}
+
+html {
+  font-size: var(--app-font-size-base, 16px);
+  font-family: var(--app-font-family, 'Inter', 'Noto Sans Devanagari', sans-serif);
+}
+
 @layer base {
   body {
-    @apply antialiased text-slate-950 bg-faint-50 font-medium;
+    @apply antialiased bg-faint-50;
+    font-family: var(--app-font-family, 'Inter', 'Noto Sans Devanagari', sans-serif);
+    color: var(--app-font-color, #0f172a);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-weight: 500;
   }
 
   h1 {
     @apply font-black tracking-tight text-slate-950;
+    font-family: var(--app-font-family, inherit);
   }
 
   h2, h3 {
     @apply font-extrabold tracking-tight text-slate-950;
+    font-family: var(--app-font-family, inherit);
   }
 
   h4, h5, h6 {
     @apply font-bold tracking-tight text-slate-950;
+    font-family: var(--app-font-family, inherit);
   }
 
   th {
     @apply font-bold text-slate-800 tracking-wider;
+    font-family: var(--app-font-family, inherit);
   }
 
   td {
     @apply font-semibold text-slate-900;
+    font-family: var(--app-font-family, inherit);
   }
 
   label {
     @apply font-bold text-slate-800;
+    font-family: var(--app-font-family, inherit);
   }
 
   button, input, select, textarea {
-    font-family: inherit;
+    font-family: var(--app-font-family, inherit);
   }
+}
+
+/* Global Custom Font Color Overrides across main, header, cards, modals */
+[data-custom-font="true"] main .text-slate-950,
+[data-custom-font="true"] main .text-slate-900,
+[data-custom-font="true"] main .text-slate-800,
+[data-custom-font="true"] header .text-slate-950,
+[data-custom-font="true"] header .text-slate-900,
+[data-custom-font="true"] header .text-slate-800,
+[data-custom-font="true"] [role="dialog"] .text-slate-950,
+[data-custom-font="true"] [role="dialog"] .text-slate-900,
+[data-custom-font="true"] [role="dialog"] .text-slate-800 {
+  color: var(--app-font-color);
+}
+
+[data-custom-font="true"] h1,
+[data-custom-font="true"] h2,
+[data-custom-font="true"] h3,
+[data-custom-font="true"] h4,
+[data-custom-font="true"] h5,
+[data-custom-font="true"] h6 {
+  color: var(--app-heading-color, var(--app-font-color));
+}
+
+[data-custom-font="true"] main table th,
+[data-custom-font="true"] [role="dialog"] table th {
+  color: var(--app-font-color);
+}
+
+[data-custom-font="true"] main table td:not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-red"]):not([class*="text-white"]):not([class*="text-blue"]):not([class*="text-brand"]),
+[data-custom-font="true"] [role="dialog"] table td:not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-red"]):not([class*="text-white"]):not([class*="text-blue"]):not([class*="text-brand"]) {
+  color: var(--app-font-color);
+}
+
+[data-custom-font="true"] main label,
+[data-custom-font="true"] [role="dialog"] label {
+  color: var(--app-font-color);
+}
+
+/* Font Weight Scalings */
+[data-font-weight="normal"] body {
+  font-weight: 400 !important;
+}
+[data-font-weight="normal"] p,
+[data-font-weight="normal"] span.font-medium,
+[data-font-weight="normal"] td {
+  font-weight: 400 !important;
+}
+[data-font-weight="normal"] h1,
+[data-font-weight="normal"] h2,
+[data-font-weight="normal"] h3 {
+  font-weight: 700 !important;
+}
+
+[data-font-weight="medium"] body {
+  font-weight: 500 !important;
+}
+[data-font-weight="medium"] h1,
+[data-font-weight="medium"] h2,
+[data-font-weight="medium"] h3 {
+  font-weight: 800 !important;
+}
+
+[data-font-weight="bold"] body,
+[data-font-weight="bold"] p,
+[data-font-weight="bold"] span:not([class*="font-black"]):not([class*="text-white"]):not([class*="text-amber"]),
+[data-font-weight="bold"] td,
+[data-font-weight="bold"] input,
+[data-font-weight="bold"] select,
+[data-font-weight="bold"] textarea {
+  font-weight: 600 !important;
+}
+[data-font-weight="bold"] h1,
+[data-font-weight="bold"] h2,
+[data-font-weight="bold"] h3,
+[data-font-weight="bold"] h4,
+[data-font-weight="bold"] h5,
+[data-font-weight="bold"] h6,
+[data-font-weight="bold"] th,
+[data-font-weight="bold"] label,
+[data-font-weight="bold"] .font-semibold,
+[data-font-weight="bold"] .font-bold {
+  font-weight: 800 !important;
+}
+[data-font-weight="bold"] .font-black {
+  font-weight: 900 !important;
 }
 
 /* Custom Print Formatting */

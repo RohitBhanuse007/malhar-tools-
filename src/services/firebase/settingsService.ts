@@ -6,10 +6,17 @@ import {
   onSnapshot
 } from 'firebase/firestore';
 import { db, SHOP_ID, isFirebaseConfigured } from './config';
-import { ShopSettings } from '../../types';
+import { ShopSettings, FontSettings } from '../../types';
 
 const SETTINGS_DOC_PATH = `shops/${SHOP_ID}/settings/general`;
 const LOCAL_SETTINGS_KEY = 'malhar_tools_settings';
+
+export const DEFAULT_FONT_SETTINGS: FontSettings = {
+  fontFamily: 'Inter',
+  fontSize: 'md',
+  fontWeight: 'medium',
+  fontColor: '#0f172a',
+};
 
 export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   shopName: 'Malhar Tools',
@@ -45,6 +52,8 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   bankBranch: 'Main Market Branch, Sangli',
   invoicePrefix: 'MT/26-27/',
   invoiceTerms: '1. Goods once sold will not be taken back without original invoice. 2. Warranty/guarantee as per manufacturer terms. 3. Subject to Sangli jurisdiction.',
+  // Font & Appearance Defaults
+  fontSettings: DEFAULT_FONT_SETTINGS,
 };
 
 function getLocalSettings(): ShopSettings {
@@ -56,6 +65,10 @@ function getLocalSettings(): ShopSettings {
         ...DEFAULT_SHOP_SETTINGS,
         ...parsed,
         logoUrl: parsed.logoUrl || '/logo.png',
+        fontSettings: {
+          ...DEFAULT_FONT_SETTINGS,
+          ...(parsed.fontSettings || {}),
+        },
       };
     }
   } catch {
