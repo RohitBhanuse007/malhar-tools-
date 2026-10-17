@@ -32,11 +32,11 @@ export const Header: React.FC<HeaderProps> = ({
           <img src="/logo.png" alt="Malhar Tools Logo" className="w-full h-full object-contain" />
         </div>
         <div className="min-w-0">
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-950 truncate tracking-tight">
             {pageTitle}
           </h2>
           {pageSubtitle && (
-            <p className="text-xs text-slate-500 hidden sm:block truncate mt-0.5">
+            <p className="text-xs font-bold text-slate-600 hidden sm:block truncate mt-0.5">
               {pageSubtitle}
             </p>
           )}

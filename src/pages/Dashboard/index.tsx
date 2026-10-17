@@ -77,11 +77,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <img src={shopSettings?.logoUrl || '/logo.png'} alt="Malhar Tools Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight flex items-center gap-1.5">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-1.5">
               <span className="text-amber-400">MALHAR</span>
               <span className="text-white">TOOLS</span>
             </h2>
-            <p className="text-xs uppercase tracking-wider text-amber-200/80 font-medium mt-0.5">
+            <p className="text-xs uppercase tracking-wider text-amber-200 font-bold mt-0.5">
               HARDWARE • TOOLS • SPARES
             </p>
           </div>
@@ -92,7 +92,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             size="sm"
             leftIcon={<ShoppingCart className="w-4 h-4 text-amber-800" />}
             onClick={onOpenAddSale}
-            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-black shadow-xs"
           >
             {t('dashboard.addSale')}
           </Button>
@@ -101,7 +101,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             size="sm"
             leftIcon={<Truck className="w-4 h-4 text-amber-900" />}
             onClick={onOpenAddPurchase}
-            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-black shadow-xs"
           >
             {t('dashboard.addPurchase')}
           </Button>
@@ -110,7 +110,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             size="sm"
             leftIcon={<Plus className="w-4 h-4 text-amber-800" />}
             onClick={onOpenAddProduct}
-            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-bold shadow-xs"
+            className="bg-white hover:bg-amber-50 text-slate-950 border border-amber-300 font-black shadow-xs"
           >
             {t('dashboard.addProduct')}
           </Button>
@@ -222,14 +222,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 {recentSales.map((sale) => (
                   <div key={sale.id} className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">{sale.productName}</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <h4 className="font-bold text-slate-950 text-sm">{sale.productName}</h4>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
                         {sale.quantity} units • {formatDate(sale.date)} • {sale.customerName || sale.paymentMode}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-900 text-sm">{formatCurrency(sale.totalAmount)}</p>
-                      <span className="text-[11px] font-medium text-emerald-600">{sale.paymentMode}</span>
+                      <p className="font-black text-slate-950 text-sm font-mono">{formatCurrency(sale.totalAmount)}</p>
+                      <span className="text-[11px] font-bold text-emerald-700">{sale.paymentMode}</span>
                     </div>
                   </div>
                 ))}
@@ -246,7 +246,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             action={
               <button
                 onClick={() => onNavigate('purchases')}
-                className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1"
+                className="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1"
               >
                 <span>{t('common.view')} {t('common.all')}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -255,7 +255,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           />
           <CardBody className="p-0">
             {recentPurchases.length === 0 ? (
-              <div className="p-8 text-center text-sm text-slate-500">
+              <div className="p-8 text-center text-sm font-semibold text-slate-500">
                 {t('dashboard.noRecentPurchases')}
               </div>
             ) : (
@@ -263,14 +263,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 {recentPurchases.map((purchase) => (
                   <div key={purchase.id} className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">{purchase.productName}</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <h4 className="font-bold text-slate-950 text-sm">{purchase.productName}</h4>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
                         +{purchase.quantity} units • {formatDate(purchase.date)} • {purchase.supplierName}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-900 text-sm">{formatCurrency(purchase.totalAmount)}</p>
-                      <span className="text-[11px] font-medium text-blue-600">{purchase.paymentStatus}</span>
+                      <p className="font-black text-slate-950 text-sm font-mono">{formatCurrency(purchase.totalAmount)}</p>
+                      <span className="text-[11px] font-bold text-blue-700">{purchase.paymentStatus}</span>
                     </div>
                   </div>
                 ))}

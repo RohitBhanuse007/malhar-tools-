@@ -4,8 +4,37 @@
 
 @layer base {
   body {
-    @apply antialiased text-slate-900 bg-faint-50;
+    @apply antialiased text-slate-950 bg-faint-50 font-medium;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-weight: 500;
+  }
+
+  h1 {
+    @apply font-black tracking-tight text-slate-950;
+  }
+
+  h2, h3 {
+    @apply font-extrabold tracking-tight text-slate-950;
+  }
+
+  h4, h5, h6 {
+    @apply font-bold tracking-tight text-slate-950;
+  }
+
+  th {
+    @apply font-bold text-slate-800 tracking-wider;
+  }
+
+  td {
+    @apply font-semibold text-slate-900;
+  }
+
+  label {
+    @apply font-bold text-slate-800;
+  }
+
+  button, input, select, textarea {
+    font-family: inherit;
   }
 }
 

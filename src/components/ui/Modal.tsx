@@ -58,8 +58,8 @@ export const Modal: React.FC<ModalProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-amber-100/80 px-6 py-4 bg-amber-50/40">
             <div>
-              <h3 className="text-base font-bold text-slate-900">{title}</h3>
-              {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+              <h3 className="text-base font-extrabold text-slate-950">{title}</h3>
+              {subtitle && <p className="text-xs font-semibold text-slate-600 mt-0.5">{subtitle}</p>}
             </div>
             <button
               onClick={onClose}

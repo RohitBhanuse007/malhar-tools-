@@ -34,14 +34,14 @@ export const StatCard: React.FC<StatCardProps> = ({
     >
       <div className="flex items-start justify-between">
         <div className="space-y-1.5">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">
             {title}
           </p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-2xl font-bold tracking-tight text-slate-900">{value}</h3>
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950">{value}</h3>
             {badge && <span>{badge}</span>}
           </div>
-          {subtext && <p className="text-xs text-slate-500">{subtext}</p>}
+          {subtext && <p className="text-xs font-semibold text-slate-600">{subtext}</p>}
         </div>
         <div
           className={`p-3 rounded-xl shrink-0 ${iconBgColor} ${iconTextColor} shadow-xs`}

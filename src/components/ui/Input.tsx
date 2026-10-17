@@ -17,7 +17,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
+            className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5"
           >
             {label}
             {props.required && <span className="text-rose-500 ml-1">*</span>}
@@ -32,12 +32,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
-            className={`w-full rounded-lg border text-sm transition-all placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-slate-50 disabled:text-slate-500 ${
+            className={`w-full rounded-lg border text-sm font-semibold transition-all placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-slate-50 disabled:text-slate-500 ${
               leftAddon ? 'pl-10' : 'pl-3.5'
             } ${rightAddon ? 'pr-10' : 'pr-3.5'} py-2.5 ${
               error
                 ? 'border-rose-300 text-rose-900 focus:border-rose-500 focus:ring-rose-200 bg-rose-50/20'
-                : 'border-slate-300 text-slate-900 focus:border-brand-500 focus:ring-brand-200 hover:border-slate-400'
+                : 'border-slate-300 text-slate-950 focus:border-brand-500 focus:ring-brand-200 hover:border-slate-400'
             } ${className}`}
             {...props}
           />
@@ -47,9 +47,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {error && <p className="mt-1.5 text-xs text-rose-600 font-medium">{error}</p>}
+        {error && <p className="mt-1.5 text-xs text-rose-600 font-bold">{error}</p>}
         {!error && helperText && (
-          <p className="mt-1.5 text-xs text-slate-500">{helperText}</p>
+          <p className="mt-1.5 text-xs text-slate-600 font-semibold">{helperText}</p>
         )}
       </div>
     );

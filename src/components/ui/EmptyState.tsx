@@ -25,9 +25,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       <div className="w-14 h-14 rounded-2xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-center text-amber-700 mb-4 shadow-xs">
         {icon}
       </div>
-      <h4 className="text-base font-semibold text-slate-800">{title}</h4>
+      <h4 className="text-base font-bold text-slate-900">{title}</h4>
       {description && (
-        <p className="text-sm text-slate-500 max-w-md mt-1.5 leading-relaxed">
+        <p className="text-sm font-medium text-slate-600 max-w-md mt-1.5 leading-relaxed">
           {description}
         </p>
       )}

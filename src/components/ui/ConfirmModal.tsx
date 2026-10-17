@@ -53,8 +53,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">{title}</h3>
-              <p className="text-sm text-slate-600 mt-2 leading-relaxed">{message}</p>
+              <h3 className="text-base font-black text-slate-950">{title}</h3>
+              <p className="text-sm font-semibold text-slate-700 mt-2 leading-relaxed">{message}</p>
             </div>
           </div>
 

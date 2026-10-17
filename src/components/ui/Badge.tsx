@@ -24,8 +24,8 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5',
-    md: 'text-xs px-2.5 py-1 font-medium',
+    sm: 'text-xs px-2 py-0.5 font-bold',
+    md: 'text-xs px-2.5 py-1 font-bold',
   };
 
   return (
@@ -45,7 +45,7 @@ export const StockBadge: React.FC<{ status: StockStatus; className?: string }> =
 
   if (status === 'out_of_stock') {
     return (
-      <Badge variant="danger" className={`font-semibold ${className}`}>
+      <Badge variant="danger" className={`font-bold ${className}`}>
         <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5" />
         {t('products.outOfStock')}
       </Badge>
@@ -54,7 +54,7 @@ export const StockBadge: React.FC<{ status: StockStatus; className?: string }> =
 
   if (status === 'low_stock') {
     return (
-      <Badge variant="warning" className={`font-semibold ${className}`}>
+      <Badge variant="warning" className={`font-bold ${className}`}>
         <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />
         {t('products.lowStock')}
       </Badge>
@@ -62,7 +62,7 @@ export const StockBadge: React.FC<{ status: StockStatus; className?: string }> =
   }
 
   return (
-    <Badge variant="success" className={`font-semibold ${className}`}>
+    <Badge variant="success" className={`font-bold ${className}`}>
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" />
       {t('products.inStock')}
     </Badge>
@@ -76,10 +76,10 @@ export const PaymentStatusBadge: React.FC<{ status: PaymentStatus; className?: s
   const { t } = useLanguage();
 
   if (status === 'paid') {
-    return <Badge variant="success" className={className}>{t('purchases.statusPaid')}</Badge>;
+    return <Badge variant="success" className={`font-bold ${className}`}>{t('purchases.statusPaid')}</Badge>;
   }
   if (status === 'partial') {
-    return <Badge variant="warning" className={className}>{t('purchases.statusPartial')}</Badge>;
+    return <Badge variant="warning" className={`font-bold ${className}`}>{t('purchases.statusPartial')}</Badge>;
   }
-  return <Badge variant="danger" className={className}>{t('purchases.statusPending')}</Badge>;
+  return <Badge variant="danger" className={`font-bold ${className}`}>{t('purchases.statusPending')}</Badge>;
 };

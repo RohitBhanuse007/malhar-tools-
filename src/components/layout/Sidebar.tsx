@@ -92,7 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span>Firebase</span>
         </span>
         <span
-          className={`px-2 py-0.5 rounded-full font-medium text-[11px] flex items-center gap-1 ${
+          className={`px-2 py-0.5 rounded-full font-bold text-[11px] flex items-center gap-1 ${
             isFirebaseConnected
               ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/60'
               : 'bg-amber-950 text-amber-300 border border-amber-800/60'
@@ -115,10 +115,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onNavigate(item.id);
                 if (onCloseMobile) onCloseMobile();
               }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-colors text-left group ${
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors text-left group ${
                 isActive
-                  ? 'bg-brand-400 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-amber-200'
+                  ? 'bg-brand-400 text-slate-950 font-black shadow-sm'
+                  : 'text-slate-200 hover:bg-slate-800 hover:text-amber-200 font-bold'
               }`}
             >
               <Icon
@@ -129,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="flex-1 truncate">{item.label}</span>
               {item.badge !== undefined && (
                 <span
-                  className={`px-2 py-0.5 text-xs rounded-full font-bold ${
+                  className={`px-2 py-0.5 text-xs rounded-full font-black ${
                     isActive
                       ? 'bg-slate-950 text-brand-300'
                       : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Logout button */}
         <button
           onClick={onLogoutClick}
-          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-300 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
         >
           <LogOut className="w-4 h-4 shrink-0" />
           <span>{t('auth.logout')}</span>
