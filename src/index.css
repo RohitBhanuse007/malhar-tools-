@@ -41,18 +41,39 @@
 /* Custom Print Formatting */
 @media print {
   @page {
-    margin: 1cm;
-    size: auto;
+    margin: 8mm;
+    size: A4 portrait;
   }
-  body {
+  html, body {
     background: white !important;
     color: black !important;
+    font-size: 10.5pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   aside, header, nav, button, .print\:hidden {
     display: none !important;
   }
   .print\:block {
     display: block !important;
+  }
+  table {
+    page-break-inside: auto;
+    width: 100% !important;
+  }
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+  }
+  .avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
 

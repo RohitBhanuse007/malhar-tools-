@@ -31,6 +31,16 @@ service cloud.firestore {
         allow read, write: if request.auth != null;
       }
 
+      // Settings subcollection
+      match /settings/{settingId} {
+        allow read, write: if request.auth != null;
+      }
+
+      // GST Reports metadata subcollection
+      match /gstReports/{reportId} {
+        allow read, write: if request.auth != null;
+      }
+
       // Stock movements audit log subcollection
       match /stockMovements/{movementId} {
         allow read, write: if request.auth != null;

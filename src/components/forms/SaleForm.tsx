@@ -8,7 +8,8 @@ import { validateSale } from '../../utils/validators';
 import { getTodayDateString, formatCurrency } from '../../utils/formatters';
 import { CreateSaleInput } from '../../services/firebase/saleService';
 import { updateProduct } from '../../services/firebase/productService';
-import { AlertCircle } from 'lucide-react';
+import { calculateGstLineItem, INDIAN_STATES, getStateByCode, GST_RATES } from '../../utils/gstUtils';
+import { AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
 
 interface SaleFormProps {
   products: Product[];
@@ -45,18 +46,37 @@ export const SaleForm: React.FC<SaleFormProps> = ({
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // GST & Tax Invoice states
+  const [hsnCode, setHsnCode] = useState(() => {
+    const initialProd = products.find((p) => p.id === (preselectedProductId || products[0]?.id));
+    return initialProd?.hsnCode || '8204';
+  });
+  const [gstRate, setGstRate] = useState<number>(() => {
+    const initialProd = products.find((p) => p.id === (preselectedProductId || products[0]?.id));
+    return initialProd?.gstRate !== undefined ? initialProd.gstRate : 18;
+  });
+  const [isTaxInclusive, setIsTaxInclusive] = useState(true);
+  const [customerGstin, setCustomerGstin] = useState('');
+  const [customerStateCode, setCustomerStateCode] = useState('27');
+  const [discount, setDiscount] = useState('0');
+  const [invoiceNumber, setInvoiceNumber] = useState(() => {
+    return `MT/26-27/${String(Math.floor(1000 + Math.random() * 9000))}`;
+  });
+
   const selectedProduct = products.find((p) => p.id === productId);
   const availableStock = selectedProduct ? Number(selectedProduct.currentStock) || 0 : 0;
 
   const lastPopulatedProductIdRef = useRef<string>(productId);
 
-  // Auto populate selling price ONLY when selecting a new product or initial load
+  // Auto populate selling price and GST details ONLY when selecting a new product or initial load
   useEffect(() => {
     if (productId) {
       if (productId !== lastPopulatedProductIdRef.current || !sellingPrice) {
         const p = products.find((item) => item.id === productId);
         if (p) {
           setSellingPrice(String(p.sellingPrice || 0));
+          if (p.hsnCode) setHsnCode(p.hsnCode);
+          if (p.gstRate !== undefined) setGstRate(p.gstRate);
           lastPopulatedProductIdRef.current = productId;
         }
       }
@@ -73,7 +93,16 @@ export const SaleForm: React.FC<SaleFormProps> = ({
     }
   }, [customerId, customers]);
 
-  const totalAmount = (Number(quantity) || 0) * (Number(sellingPrice) || 0);
+  const isInterState = customerStateCode !== '27';
+  const taxBreakdown = calculateGstLineItem({
+    quantity: Number(quantity) || 0,
+    unitPrice: Number(sellingPrice) || 0,
+    gstRate: Number(gstRate) || 0,
+    discount: Number(discount) || 0,
+    isTaxInclusive,
+    isInterState,
+  });
+  const totalAmount = taxBreakdown.grandTotal;
   const remainingDue = Math.max(0, totalAmount - (Number(initialPaid) || 0));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -128,6 +157,21 @@ export const SaleForm: React.FC<SaleFormProps> = ({
       customerId: customerId || undefined,
       initialPaid: isCreditSale ? Number(initialPaid) || 0 : totalAmount,
       notes: notes.trim(),
+      // GST snapshot fields
+      invoiceNumber: invoiceNumber.trim() || undefined,
+      customerGstin: customerGstin.trim().toUpperCase() || undefined,
+      customerState: getStateByCode(customerStateCode)?.name,
+      customerStateCode,
+      hsnCode: hsnCode.trim() || undefined,
+      gstRate: Number(gstRate),
+      isTaxInclusive,
+      taxableAmount: taxBreakdown.taxableAmount,
+      cgst: taxBreakdown.cgst,
+      sgst: taxBreakdown.sgst,
+      igst: taxBreakdown.igst,
+      totalGst: taxBreakdown.totalGst,
+      isInterState,
+      discount: Number(discount) || 0,
     });
   };
 
@@ -246,10 +290,122 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         </div>
       )}
 
-      {/* Total Amount Display Banner */}
-      <div className="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between font-semibold text-sm">
-        <span className="text-slate-300">{t('sales.totalAmount')}:</span>
-        <span className="text-lg font-bold text-emerald-400">{formatCurrency(totalAmount)}</span>
+      {/* GST & Tax Classification Panel */}
+      <div className="p-4 bg-amber-50/60 border border-amber-200/90 rounded-2xl space-y-3">
+        <div className="flex items-center justify-between pb-2 border-b border-amber-200/60">
+          <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-amber-600" />
+            <span>GST & Tax Invoice Configuration</span>
+          </span>
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-amber-900">
+            <input
+              type="checkbox"
+              checked={isTaxInclusive}
+              onChange={(e) => setIsTaxInclusive(e.target.checked)}
+              className="rounded text-amber-600 focus:ring-amber-500 w-4 h-4"
+            />
+            <span>{isTaxInclusive ? 'Tax-Inclusive (किंमत कर समाविष्ट)' : 'Exclusive (+ GST)'}</span>
+          </label>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <Input
+            label="HSN / SAC"
+            value={hsnCode}
+            onChange={(e) => setHsnCode(e.target.value)}
+            placeholder="8204"
+          />
+
+          <div>
+            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+              GST Rate
+            </label>
+            <select
+              value={gstRate}
+              onChange={(e) => setGstRate(Number(e.target.value))}
+              className="w-full rounded-xl border border-amber-200 py-2.5 px-3 text-xs font-bold bg-white text-slate-900"
+            >
+              {GST_RATES.map((r) => (
+                <option key={r} value={r}>
+                  {r}% GST
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Input
+            label="Discount (₹)"
+            type="number"
+            min="0"
+            step="any"
+            value={discount}
+            onChange={(e) => setDiscount(e.target.value)}
+            placeholder="0"
+            leftAddon="₹"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+          <Input
+            label="Customer GSTIN (B2B Only)"
+            value={customerGstin}
+            onChange={(e) => setCustomerGstin(e.target.value.toUpperCase())}
+            placeholder="e.g. 27ABCDE1234F1Z5"
+          />
+
+          <div>
+            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+              Place of Supply (State)
+            </label>
+            <select
+              value={customerStateCode}
+              onChange={(e) => setCustomerStateCode(e.target.value)}
+              className="w-full rounded-xl border border-amber-200 py-2.5 px-3 text-xs font-bold bg-white text-slate-900"
+            >
+              {INDIAN_STATES.map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.code} - {s.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Real-time Tax Breakdown Strip */}
+        <div className="p-3 bg-white rounded-xl border border-amber-200 text-xs flex flex-wrap items-center justify-between gap-2 font-semibold">
+          <div>
+            <span className="text-slate-500 block text-[10px] uppercase font-bold">Taxable Amount</span>
+            <span className="font-mono font-bold text-slate-900">{formatCurrency(taxBreakdown.taxableAmount)}</span>
+          </div>
+
+          {!isInterState ? (
+            <>
+              <div>
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">CGST ({gstRate / 2}%)</span>
+                <span className="font-mono font-bold text-slate-900">{formatCurrency(taxBreakdown.cgst)}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">SGST ({gstRate / 2}%)</span>
+                <span className="font-mono font-bold text-slate-900">{formatCurrency(taxBreakdown.sgst)}</span>
+              </div>
+            </>
+          ) : (
+            <div>
+              <span className="text-blue-600 block text-[10px] uppercase font-bold">IGST Inter-State ({gstRate}%)</span>
+              <span className="font-mono font-bold text-blue-700">{formatCurrency(taxBreakdown.igst)}</span>
+            </div>
+          )}
+
+          <div>
+            <span className="text-amber-800 block text-[10px] uppercase font-bold">Total GST</span>
+            <span className="font-mono font-bold text-amber-800">{formatCurrency(taxBreakdown.totalGst)}</span>
+          </div>
+
+          <div className="text-right">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold">Grand Total</span>
+            <span className="font-mono font-black text-emerald-600 text-sm">{formatCurrency(totalAmount)}</span>
+          </div>
+        </div>
       </div>
 
       {/* Date & Payment Mode Grid */}

@@ -11,6 +11,7 @@ import { CustomersPage } from './pages/Customers';
 import { AlertsPage } from './pages/Alerts';
 import { ReportsPage } from './pages/Reports';
 import { SettingsPage } from './pages/Settings';
+import { GSTManagementPage } from './pages/GSTManagement';
 import { SplashScreen } from './components/ui/SplashScreen';
 
 // Services
@@ -171,6 +172,8 @@ export const App: React.FC = () => {
         return t('nav.customers');
       case 'alerts':
         return t('nav.alerts');
+      case 'gst':
+        return t('nav.gst');
       case 'reports':
         return t('nav.reports');
       case 'settings':
@@ -194,6 +197,8 @@ export const App: React.FC = () => {
         return t('customers.subtitle');
       case 'alerts':
         return t('alerts.subtitle');
+      case 'gst':
+        return t('gst.subtitle');
       case 'reports':
         return t('reports.subtitle');
       case 'settings':
@@ -268,6 +273,7 @@ export const App: React.FC = () => {
           sales={sales}
           products={products}
           customers={customers}
+          shopSettings={shopSettings}
           onAddSale={async (data: CreateSaleInput) => {
             await createSale(data);
           }}
@@ -295,6 +301,19 @@ export const App: React.FC = () => {
           products={products}
           shopSettings={shopSettings}
           onQuickPurchase={handleQuickPurchase}
+        />
+      )}
+
+      {currentPage === 'gst' && (
+        <GSTManagementPage
+          sales={sales}
+          purchases={purchases}
+          products={products}
+          customers={customers}
+          shopSettings={shopSettings}
+          onSaveSettings={async (updated) => {
+            await updateShopSettings(updated);
+          }}
         />
       )}
 

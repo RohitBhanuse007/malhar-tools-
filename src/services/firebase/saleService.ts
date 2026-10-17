@@ -72,13 +72,10 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
       newSaleId = saleRef.id;
 
       transaction.set(saleRef, {
-        productId: saleData.productId,
-        productName: saleData.productName,
+        ...saleData,
         quantity,
         sellingPrice: price,
         totalAmount,
-        date: saleData.date,
-        paymentMode: saleData.paymentMode,
         customerName: saleData.customerName || '',
         customerId: saleData.customerId || '',
         notes: saleData.notes || '',
@@ -168,13 +165,10 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
   const sales = getLocalSales();
   const newSale: Sale = {
     id: 'sale_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-    productId: saleData.productId,
-    productName: saleData.productName,
+    ...saleData,
     quantity,
     sellingPrice: price,
     totalAmount,
-    date: saleData.date,
-    paymentMode: saleData.paymentMode,
     customerName: saleData.customerName || '',
     customerId: saleData.customerId || '',
     notes: saleData.notes || '',

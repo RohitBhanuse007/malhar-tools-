@@ -44,6 +44,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         ? String(initialData.lowStockThreshold)
         : String(shopSettings?.defaultLowStockThreshold || 5),
     description: initialData?.description || '',
+    hsnCode: initialData?.hsnCode || '',
+    gstRate: initialData?.gstRate !== undefined ? String(initialData.gstRate) : String(shopSettings?.defaultGstRate || 18),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -59,9 +61,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         currentStock: String(initialData.currentStock),
         lowStockThreshold: String(initialData.lowStockThreshold),
         description: initialData.description || '',
+        hsnCode: initialData.hsnCode || '',
+        gstRate: initialData.gstRate !== undefined ? String(initialData.gstRate) : String(shopSettings?.defaultGstRate || 18),
       });
     }
-  }, [initialData]);
+  }, [initialData, shopSettings]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -98,8 +102,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       currentStock: Number(formData.currentStock),
       lowStockThreshold: Number(formData.lowStockThreshold),
       description: formData.description.trim(),
+      hsnCode: formData.hsnCode.trim() || undefined,
+      gstRate: Number(formData.gstRate) || 18,
     });
   };
+
+  const gstRateOptions = [
+    { value: '0', label: '0% (Exempt / Nil Rated)' },
+    { value: '5', label: '5% GST' },
+    { value: '12', label: '12% GST' },
+    { value: '18', label: '18% GST (Standard Tools)' },
+    { value: '28', label: '28% GST (Luxury / Heavy)' },
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -134,6 +148,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           options={defaultUnits}
           error={errors.unit}
           required
+        />
+      </div>
+
+      {/* GST HSN/SAC Code and Rate Classification */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 bg-amber-50/50 rounded-xl border border-amber-200/80">
+        <Input
+          label="HSN / SAC Code"
+          name="hsnCode"
+          value={formData.hsnCode}
+          onChange={handleChange}
+          placeholder="e.g. 8204 or 8205"
+          helperText="Standard hardware tool HSN: 8204, 8205, 8207"
+        />
+
+        <Select
+          label="Applicable GST Rate"
+          name="gstRate"
+          value={formData.gstRate}
+          onChange={handleChange}
+          options={gstRateOptions}
         />
       </div>
 

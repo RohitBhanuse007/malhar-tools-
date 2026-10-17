@@ -14,7 +14,7 @@ const LOCAL_SETTINGS_KEY = 'malhar_tools_settings';
 export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   shopName: 'Malhar Tools',
   shopNameMr: 'मल्हार टूल्स',
-  address: 'Shop No. 4, Main Hardware Market, Station Road, Maharashtra',
+  address: 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra',
   contactNumber: '+91 98765 43210',
   email: 'owner@malhartools.com',
   logoUrl: '/logo.png',
@@ -32,6 +32,19 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
     'Hardware Fittings',
     'General Materials'
   ],
+  // GST & Invoicing Defaults
+  gstin: '27AABCM1234F1Z5',
+  state: 'Maharashtra',
+  stateCode: '27',
+  tradeName: 'Malhar Tools Hardware & Spares',
+  gstScheme: 'regular',
+  defaultGstRate: 18,
+  bankName: 'State Bank of India',
+  bankAccountNumber: '389012345678',
+  bankIfsc: 'SBIN0001234',
+  bankBranch: 'Main Market Branch, Sangli',
+  invoicePrefix: 'MT/26-27/',
+  invoiceTerms: '1. Goods once sold will not be taken back without original invoice. 2. Warranty/guarantee as per manufacturer terms. 3. Subject to Sangli jurisdiction.',
 };
 
 function getLocalSettings(): ShopSettings {

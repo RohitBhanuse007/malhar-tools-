@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { ShoppingCart, Plus, Search, Calendar, User, CreditCard, Banknote } from 'lucide-react';
-import { Sale, Product, Customer } from '../../types';
+import { ShoppingCart, Plus, Search, Calendar, User, CreditCard, Banknote, Printer, FileText } from 'lucide-react';
+import { Sale, Product, Customer, ShopSettings } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { SaleForm } from '../../components/forms/SaleForm';
+import { GstTaxInvoice } from '../../components/gst/GstTaxInvoice';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
 import { formatCurrency, formatDate, getTodayDateString } from '../../utils/formatters';
@@ -16,6 +17,7 @@ interface SalesPageProps {
   products: Product[];
   customers: Customer[];
   onAddSale: (data: CreateSaleInput) => Promise<void>;
+  shopSettings?: ShopSettings | null;
   isOpenAddModalExternal?: boolean;
   onCloseAddModalExternal?: () => void;
   preselectedProductId?: string;
@@ -26,6 +28,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
   products,
   customers,
   onAddSale,
+  shopSettings,
   isOpenAddModalExternal = false,
   onCloseAddModalExternal,
   preselectedProductId,
@@ -38,6 +41,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
   const [paymentModeFilter, setPaymentModeFilter] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [viewInvoiceSale, setViewInvoiceSale] = useState<Sale | null>(null);
 
   const showAddModal = isAddModalOpen || isOpenAddModalExternal;
   const handleCloseAddModal = () => {
@@ -234,6 +238,7 @@ export const SalesPage: React.FC<SalesPageProps> = ({
                     <th className="py-3.5 px-4 text-right">{t('sales.sellingPrice')}</th>
                     <th className="py-3.5 px-4 text-right">{t('sales.totalAmount')}</th>
                     <th className="py-3.5 px-4">{t('sales.paymentMode')}</th>
+                    <th className="py-3.5 px-4 text-center">Tax Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-amber-100/60 text-sm">
@@ -271,6 +276,17 @@ export const SalesPage: React.FC<SalesPageProps> = ({
                         >
                           {s.paymentMode}
                         </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          leftIcon={<Printer className="w-3.5 h-3.5" />}
+                          onClick={() => setViewInvoiceSale(s)}
+                          className="font-bold text-xs py-1 px-2.5"
+                        >
+                          Invoice
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -329,6 +345,18 @@ export const SalesPage: React.FC<SalesPageProps> = ({
                   <span>{formatDate(s.date)}</span>
                   {s.notes && <span className="truncate max-w-[150px]">💬 {s.notes}</span>}
                 </div>
+
+                <div className="pt-2 border-t border-amber-100 flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    leftIcon={<Printer className="w-3.5 h-3.5" />}
+                    onClick={() => setViewInvoiceSale(s)}
+                    className="font-bold text-xs py-1 px-2.5 w-full justify-center"
+                  >
+                    View / Print GST Invoice
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -351,6 +379,23 @@ export const SalesPage: React.FC<SalesPageProps> = ({
           preselectedProductId={preselectedProductId}
         />
       </Modal>
+
+      {/* GST Tax Invoice Modal */}
+      {viewInvoiceSale && (
+        <Modal
+          isOpen={Boolean(viewInvoiceSale)}
+          onClose={() => setViewInvoiceSale(null)}
+          title="Tax Invoice"
+          maxWidth="2xl"
+        >
+          <GstTaxInvoice
+            sale={viewInvoiceSale}
+            shopSettings={shopSettings}
+            onClose={() => setViewInvoiceSale(null)}
+            isModal={true}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

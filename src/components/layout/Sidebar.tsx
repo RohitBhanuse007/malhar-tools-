@@ -11,7 +11,8 @@ import {
   LogOut,
   Wrench,
   Globe,
-  Database
+  Database,
+  FileSpreadsheet
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
@@ -51,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: AlertTriangle,
       badge: lowStockCount > 0 ? lowStockCount : undefined,
     },
+    { id: 'gst', label: t('nav.gst'), icon: FileSpreadsheet },
     { id: 'reports', label: t('nav.reports'), icon: BarChart3 },
     { id: 'settings', label: t('nav.settings'), icon: Settings },
   ];
