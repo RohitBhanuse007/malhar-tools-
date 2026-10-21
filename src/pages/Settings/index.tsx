@@ -285,18 +285,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             <CardHeader
               title={t('settings.shopInfoTab')}
               subtitle="This information appears on printable receipts and invoices"
-              action={
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  leftIcon={<Save className="w-3.5 h-3.5" />}
-                  isLoading={isSaving}
-                  className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold shadow-sm"
-                >
-                  {t('common.save')}
-                </Button>
-              }
             />
             <CardBody className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -379,22 +367,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     />
                   </div>
                 </div>
-              </div>
-
-              {/* Bottom Card Save Action */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <p className="text-xs text-slate-500">
-                  {language === 'mr' ? 'माहिती सेव्ह करण्यासाठी सेव्ह बटण दाबा.' : 'Click Save Settings to save shop information.'}
-                </p>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  leftIcon={<Save className="w-4 h-4" />}
-                  isLoading={isSaving}
-                  className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold shadow-sm"
-                >
-                  {t('common.save')} {t('nav.settings')}
-                </Button>
               </div>
             </CardBody>
           </Card>
@@ -958,7 +930,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               variant="primary"
               leftIcon={<Save className="w-4 h-4" />}
               isLoading={isSaving}
-              className="shadow-sm shadow-amber-500/20"
+              className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-black shadow-md shadow-[#F4C430]/20"
             >
               {t('common.save')} {t('nav.settings')}
             </Button>
