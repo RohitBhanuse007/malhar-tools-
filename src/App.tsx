@@ -321,7 +321,8 @@ export const App: React.FC = () => {
           customers={customers}
           shopSettings={shopSettings}
           onSaveSettings={async (updated) => {
-            await updateShopSettings(updated);
+            const saved = await updateShopSettings(updated);
+            setShopSettings(saved);
           }}
         />
       )}
@@ -341,7 +342,8 @@ export const App: React.FC = () => {
         <SettingsPage
           settings={shopSettings}
           onSaveSettings={async (updated) => {
-            await updateShopSettings(updated);
+            const saved = await updateShopSettings(updated);
+            setShopSettings(saved);
           }}
         />
       )}

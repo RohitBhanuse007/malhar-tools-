@@ -22,7 +22,7 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   shopName: 'Malhar Tools',
   shopNameMr: 'मल्हार टूल्स',
   address: 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra',
-  contactNumber: '+91 98765 43210',
+  contactNumber: '+91 8208219305',
   email: 'bhanusedarshan@gmail.com',
   logoUrl: '/logo.png',
   defaultLanguage: 'en',
@@ -61,6 +61,13 @@ function getLocalSettings(): ShopSettings {
     const raw = localStorage.getItem(LOCAL_SETTINGS_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
+      // Automatically migrate legacy demo contact or email
+      if (parsed.contactNumber === '+91 98765 43210' || parsed.contactNumber === '9876543210') {
+        parsed.contactNumber = '+91 8208219305';
+      }
+      if (parsed.email === 'owner@malhartools.com') {
+        parsed.email = 'bhanusedarshan@gmail.com';
+      }
       return {
         ...DEFAULT_SHOP_SETTINGS,
         ...parsed,
@@ -78,74 +85,122 @@ function getLocalSettings(): ShopSettings {
 }
 
 function saveLocalSettings(settings: ShopSettings): void {
-  localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(settings));
+  try {
+    localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(settings));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('malhar_tools_settings_changed', { detail: settings }));
+    }
+  } catch (e) {
+    console.warn('Could not save settings to localStorage:', e);
+  }
 }
 
 export async function getShopSettings(): Promise<ShopSettings> {
+  const local = getLocalSettings();
   const firestore = db;
   if (isFirebaseConfigured() && firestore) {
     try {
       const docRef = doc(firestore, SETTINGS_DOC_PATH);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        return { ...DEFAULT_SHOP_SETTINGS, ...snap.data() } as ShopSettings;
+        const remote = snap.data();
+        return { ...DEFAULT_SHOP_SETTINGS, ...remote, ...local } as ShopSettings;
       }
     } catch (error) {
-      console.warn('Failed to load shop settings from Firestore, using fallback:', error);
+      console.warn('Failed to load shop settings from Firestore, using local fallback:', error);
     }
   }
 
-  return getLocalSettings();
+  return local;
 }
 
-export async function updateShopSettings(settings: Partial<ShopSettings>): Promise<void> {
-  const current = await getShopSettings();
+export async function updateShopSettings(settings: Partial<ShopSettings>): Promise<ShopSettings> {
+  const current = getLocalSettings();
   const updated: ShopSettings = {
+    ...DEFAULT_SHOP_SETTINGS,
     ...current,
     ...settings,
     updatedAt: new Date().toISOString(),
   };
 
+  // 1. ALWAYS persist to local storage first so shop owner never loses settings
+  saveLocalSettings(updated);
+
+  // 2. Synchronize to Firestore with error tolerance (e.g. offline or auth rules)
   const firestore = db;
   if (isFirebaseConfigured() && firestore) {
     try {
       const docRef = doc(firestore, SETTINGS_DOC_PATH);
-      await setDoc(docRef, {
-        ...updated,
-        updatedAt: serverTimestamp(),
-      }, { merge: true });
-    } catch (error) {
-      console.error('Error saving settings to Firestore:', error);
-      throw error;
+      const cleanData: Record<string, any> = {};
+      Object.entries(updated).forEach(([k, v]) => {
+        if (v !== undefined) {
+          cleanData[k] = v;
+        }
+      });
+      cleanData.updatedAt = serverTimestamp();
+      await setDoc(docRef, cleanData, { merge: true });
+    } catch (error: any) {
+      console.warn('Notice saving settings to Firestore (preserved locally):', error?.message || error);
     }
   }
 
-  saveLocalSettings(updated);
+  return updated;
 }
 
 export function subscribeToShopSettings(callback: (settings: ShopSettings) => void): () => void {
-  const firestore = db;
-  if (isFirebaseConfigured() && firestore) {
-    const docRef = doc(firestore, SETTINGS_DOC_PATH);
-    const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      if (snapshot.exists()) {
-        callback({ ...DEFAULT_SHOP_SETTINGS, ...snapshot.data() } as ShopSettings);
-      } else {
-        callback(DEFAULT_SHOP_SETTINGS);
-      }
-    });
-    return unsubscribe;
-  }
+  // Emit local settings immediately
+  callback(getLocalSettings());
 
-  let lastRaw = '';
-  const poll = () => {
-    const raw = localStorage.getItem(LOCAL_SETTINGS_KEY) || '';
-    if (raw !== lastRaw) {
-      lastRaw = raw;
+  const handleCustomEvent = (e: any) => {
+    if (e.detail) {
+      callback(e.detail);
+    } else {
       callback(getLocalSettings());
     }
   };
-  poll();
-  const interval = setInterval(poll, 2500);
-  return () => clearInterval(interval);
+
+  const handleStorageEvent = (e: StorageEvent) => {
+    if (e.key === LOCAL_SETTINGS_KEY) {
+      callback(getLocalSettings());
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('malhar_tools_settings_changed', handleCustomEvent);
+    window.addEventListener('storage', handleStorageEvent);
+  }
+
+  let firestoreUnsub: (() => void) | null = null;
+  const firestore = db;
+  if (isFirebaseConfigured() && firestore) {
+    try {
+      const docRef = doc(firestore, SETTINGS_DOC_PATH);
+      firestoreUnsub = onSnapshot(
+        docRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const remote = snapshot.data();
+            const local = getLocalSettings();
+            const merged = { ...DEFAULT_SHOP_SETTINGS, ...remote, ...local } as ShopSettings;
+            callback(merged);
+          }
+        },
+        (err) => {
+          console.warn('Firestore settings listener notice:', err.message);
+        }
+      );
+    } catch (e) {
+      console.warn('Could not subscribe to Firestore settings:', e);
+    }
+  }
+
+  return () => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('malhar_tools_settings_changed', handleCustomEvent);
+      window.removeEventListener('storage', handleStorageEvent);
+    }
+    if (firestoreUnsub) {
+      firestoreUnsub();
+    }
+  };
 }

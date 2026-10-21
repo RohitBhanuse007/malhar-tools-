@@ -29,7 +29,7 @@ export const GstTaxInvoice: React.FC<GstTaxInvoiceProps> = ({
     : shopSettings?.shopName || 'Malhar Tools';
 
   const shopAddress = shopSettings?.address || 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra';
-  const shopContact = shopSettings?.contactNumber || '+91 98765 43210';
+  const shopContact = shopSettings?.contactNumber || '+91 8208219305';
   const shopEmail = shopSettings?.email || 'bhanusedarshan@gmail.com';
   const shopGstin = shopSettings?.gstin || '27AABCM1234F1Z5';
   const shopState = shopSettings?.state || 'Maharashtra';

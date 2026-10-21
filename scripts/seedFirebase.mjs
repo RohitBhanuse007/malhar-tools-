@@ -22,7 +22,7 @@ export const SHOP_SETTINGS = {
   shopName: 'Malhar Tools',
   shopNameMr: 'मल्हार टूल्स',
   address: 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra',
-  contactNumber: '+91 98765 43210',
+  contactNumber: '+91 8208219305',
   email: 'bhanusedarshan@gmail.com',
   logoUrl: '/logo.png',
   defaultLanguage: 'en',

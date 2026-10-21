@@ -40,7 +40,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   const { success: toastSuccess, error: toastError } = useToast();
 
   const [step, setStep] = useState<Step>('enter_phone');
-  const [phone, setPhone] = useState('9876543210');
+  const [phone, setPhone] = useState('8208219305');
   const [maskedPhone, setMaskedPhone] = useState('');
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [otpCode, setOtpCode] = useState('');
@@ -387,7 +387,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
                     maxLength={10}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                    placeholder="98765 43210"
+                    placeholder="82082 19305"
                     className="w-full px-3.5 py-3 bg-transparent text-white text-sm font-semibold outline-none placeholder:text-slate-500 tracking-wider"
                     required
                     autoFocus

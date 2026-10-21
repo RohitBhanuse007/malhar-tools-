@@ -215,13 +215,29 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          {t('settings.title')}
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          {t('settings.subtitle')}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            {t('settings.title')}
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            {t('settings.subtitle')}
+          </p>
+        </div>
+
+        {/* Prominent Header Save Button */}
+        {activeTab !== 'appearance' && (
+          <Button
+            type="button"
+            onClick={(e) => handleSave(e as any)}
+            variant="primary"
+            leftIcon={<Save className="w-4 h-4" />}
+            isLoading={isSaving}
+            className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-black text-sm shadow-md shrink-0"
+          >
+            {t('common.save')} {t('nav.settings')}
+          </Button>
+        )}
       </div>
 
       {/* Tabs */}
@@ -285,6 +301,18 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             <CardHeader
               title={t('settings.shopInfoTab')}
               subtitle="This information appears on printable receipts and invoices"
+              action={
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  leftIcon={<Save className="w-3.5 h-3.5" />}
+                  isLoading={isSaving}
+                  className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold shadow-sm"
+                >
+                  {t('common.save')}
+                </Button>
+              }
             />
             <CardBody className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -312,7 +340,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                   name="contactNumber"
                   value={formData.contactNumber}
                   onChange={handleChange}
-                  placeholder="+91 98..."
+                  placeholder="+91 8208219305"
                   required
                 />
 
@@ -367,6 +395,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Bottom Card Save Action */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <p className="text-xs text-slate-500">
+                  {language === 'mr' ? 'माहिती सेव्ह करण्यासाठी सेव्ह बटण दाबा.' : 'Click Save Settings to save shop information.'}
+                </p>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  leftIcon={<Save className="w-4 h-4" />}
+                  isLoading={isSaving}
+                  className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold shadow-sm"
+                >
+                  {t('common.save')} {t('nav.settings')}
+                </Button>
               </div>
             </CardBody>
           </Card>
