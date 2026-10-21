@@ -322,7 +322,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="owner@malhartools.com"
+                  placeholder="bhanusedarshan@gmail.com"
                   required
                 />
               </div>

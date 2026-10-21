@@ -66,7 +66,7 @@ export const resetOwnerPasswordWithPhoneOtp = functions.onCall(
 
     const settingsData = settingsDoc.data() || {};
     const authorizedContact = settingsData.contactNumber;
-    const ownerEmail = settingsData.email || 'owner@malhartools.com';
+    const ownerEmail = settingsData.email || 'bhanusedarshan@gmail.com';
 
     if (!authorizedContact) {
       throw new functions.HttpsError(

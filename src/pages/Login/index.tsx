@@ -28,7 +28,11 @@ export const LoginPage: React.FC = () => {
   });
 
   const [email, setEmail] = useState(() => {
-    return localStorage.getItem('malhar_tools_saved_email') || '';
+    const saved = localStorage.getItem('malhar_tools_saved_email');
+    if (saved && saved !== 'owner@malhartools.com') {
+      return saved;
+    }
+    return 'bhanusedarshan@gmail.com';
   });
 
   const [password, setPassword] = useState('');
@@ -167,7 +171,7 @@ export const LoginPage: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="owner@malhartools.com"
+                  placeholder="bhanusedarshan@gmail.com"
                   className="w-full pl-10 pr-4 py-3 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none transition-all placeholder:text-slate-500"
                   required
                   autoComplete="email"

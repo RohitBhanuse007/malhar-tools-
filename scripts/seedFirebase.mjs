@@ -23,7 +23,7 @@ export const SHOP_SETTINGS = {
   shopNameMr: 'मल्हार टूल्स',
   address: 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra',
   contactNumber: '+91 98765 43210',
-  email: 'owner@malhartools.com',
+  email: 'bhanusedarshan@gmail.com',
   logoUrl: '/logo.png',
   defaultLanguage: 'en',
   defaultLowStockThreshold: 5,
@@ -530,15 +530,15 @@ async function seedData() {
 
   // Attempt authentication so security rules (request.auth != null) are satisfied
   try {
-    console.log('Authenticating as Malhar Tools Owner (owner@malhartools.com)...');
+    console.log('Authenticating as Malhar Tools Owner (bhanusedarshan@gmail.com)...');
     try {
-      await signInWithEmailAndPassword(auth, 'owner@malhartools.com', 'malhar123');
-      console.log('✓ Successfully signed in to Firebase Auth.');
+      await signInWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'malhar123');
+      console.log('✓ Successfully signed in to Firebase Auth as bhanusedarshan@gmail.com.');
     } catch (authErr) {
       if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential') {
         try {
-          await createUserWithEmailAndPassword(auth, 'owner@malhartools.com', 'malhar123');
-          console.log('✓ Successfully registered and signed in owner account.');
+          await createUserWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'malhar123');
+          console.log('✓ Successfully registered and signed in bhanusedarshan@gmail.com.');
         } catch (createErr) {
           console.warn('Notice on user registration:', createErr.message);
         }
