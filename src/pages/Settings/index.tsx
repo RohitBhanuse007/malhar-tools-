@@ -215,29 +215,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            {t('settings.title')}
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            {t('settings.subtitle')}
-          </p>
-        </div>
-
-        {/* Prominent Header Save Button */}
-        {activeTab !== 'appearance' && (
-          <Button
-            type="button"
-            onClick={(e) => handleSave(e as any)}
-            variant="primary"
-            leftIcon={<Save className="w-4 h-4" />}
-            isLoading={isSaving}
-            className="bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-black text-sm shadow-md shrink-0"
-          >
-            {t('common.save')} {t('nav.settings')}
-          </Button>
-        )}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          {t('settings.title')}
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          {t('settings.subtitle')}
+        </p>
       </div>
 
       {/* Tabs */}
