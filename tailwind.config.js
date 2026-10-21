@@ -28,7 +28,19 @@ export default {
         },
         slate: {
           850: '#151f30',
-        }
+        },
+        charcoal: {
+          DEFAULT: '#20242B',
+          900: '#171A20',
+          800: '#20242B',
+          700: '#2A303A',
+        },
+        turmeric: {
+          DEFAULT: '#F4C430',
+          hover: '#E5B520',
+          light: '#FDF6D8',
+          dark: '#D4A314',
+        },
       },
     },
   },
