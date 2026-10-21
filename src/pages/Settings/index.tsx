@@ -13,8 +13,13 @@ import {
   Sparkles,
   Eye,
   Check,
-  ZoomIn
+  ZoomIn,
+  CloudUpload,
+  Upload,
+  ExternalLink,
+  ShieldAlert
 } from 'lucide-react';
+import { uploadAllCurrentDataToFirebase } from '../../services/firebase/syncService';
 import {
   ShopSettings,
   FontSettings,
@@ -58,6 +63,30 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   const [unitsInput, setUnitsInput] = useState((settings.customUnits || []).join(', '));
   const [categoriesInput, setCategoriesInput] = useState((settings.customCategories || []).join(', '));
   const [isSaving, setIsSaving] = useState(false);
+  const [isSyncingData, setIsSyncingData] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string | null>(null);
+
+  const handleSyncToFirebase = async () => {
+    setIsSyncingData(true);
+    setSyncStatus('Connecting to Firebase and initiating data upload...');
+    try {
+      const result = await uploadAllCurrentDataToFirebase((p) => {
+        setSyncStatus(p.step);
+      });
+      success(`Successfully uploaded ${result.productsCount} products, ${result.purchasesCount} purchases, and shop settings to Firebase!`);
+      setSyncStatus(`Completed! ${result.productsCount} products, ${result.purchasesCount} purchases, and shop configuration uploaded.`);
+    } catch (err: any) {
+      console.error('Firebase sync error:', err);
+      let errorMsg = err.message || 'Failed to upload data to Firebase.';
+      if (err.message && err.message.includes('Cloud Firestore API has not been used')) {
+        errorMsg = 'Cloud Firestore is not yet enabled in your Firebase Console. Please click "Create database" in Firebase Console first.';
+      }
+      toastError(errorMsg);
+      setSyncStatus(`Error: ${errorMsg}`);
+    } finally {
+      setIsSyncingData(false);
+    }
+  };
 
   useEffect(() => {
     setFormData(settings);
@@ -787,58 +816,110 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
         {/* Tab 4: Firebase Connection Status & Setup */}
         {activeTab === 'firebase' && (
-          <Card>
-            <CardHeader
-              title="Firebase Configuration & Security"
-              subtitle="Overview of database connection and security rules"
-            />
-            <CardBody className="space-y-4">
-              <div
-                className={`p-4 rounded-xl border flex items-start gap-3 ${
-                  isFirebaseConnected
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                    : 'bg-amber-50 border-amber-200 text-amber-900'
-                }`}
-              >
-                {isFirebaseConnected ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                ) : (
-                  <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                )}
-                <div className="space-y-1">
-                  <h4 className="font-bold text-sm">
-                    {isFirebaseConnected
-                      ? 'Live Firebase Firestore & Auth Active'
-                      : 'Running in Local Storage Mode (Ready for Firebase)'}
-                  </h4>
-                  <p className="text-xs leading-relaxed">
-                    {isFirebaseConnected
-                      ? `Connected to Project: ${firebaseConfig.projectId}. Authentication and atomic Firestore transactions are operational.`
-                      : 'To connect your live Firebase project, paste your Firebase config in the .env file in the project root directory, or deploy to Vercel with Environment Variables set.'}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader
+                title="Firebase Configuration & Live Database"
+                subtitle="Connected to your Google Firebase cloud project"
+              />
+              <CardBody className="space-y-5">
+                <div
+                  className={`p-4 rounded-xl border flex items-start gap-3 ${
+                    isFirebaseConnected
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                      : 'bg-amber-50 border-amber-200 text-amber-900'
+                  }`}
+                >
+                  {isFirebaseConnected ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  ) : (
+                    <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  )}
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm">
+                      {isFirebaseConnected
+                        ? 'Connected to Project: malhar-tools'
+                        : 'Running in Local Storage Mode (Ready for Firebase)'}
+                    </h4>
+                    <p className="text-xs leading-relaxed">
+                      {isFirebaseConnected
+                        ? `Firebase Client SDK is active for project ID "${firebaseConfig.projectId}". Storage Bucket: "${firebaseConfig.storageBucket}".`
+                        : 'Please configure your Firebase credentials in .env.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Upload Current Data to Firebase Card */}
+                <div className="p-5 rounded-2xl bg-amber-500/10 border-2 border-amber-500/30 space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center font-bold">
+                        <CloudUpload className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-sm">
+                          Upload Current Data to Firebase
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Uploads all shop settings, products, purchases, and customers into Firestore.
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={handleSyncToFirebase}
+                      isLoading={isSyncingData}
+                      leftIcon={<Upload className="w-4 h-4" />}
+                      className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs"
+                    >
+                      {isSyncingData ? 'Uploading Data...' : 'Upload Data to Firebase'}
+                    </Button>
+                  </div>
+
+                  {syncStatus && (
+                    <div className="p-3 bg-white rounded-xl border border-amber-200 text-xs font-medium text-slate-700 animate-fade-in flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span>{syncStatus}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Setup Guidance for Firestore & Auth */}
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 text-xs text-slate-700">
+                  <h5 className="font-bold text-slate-900 flex items-center gap-1.5">
+                    <ExternalLink className="w-4 h-4 text-blue-600" />
+                    <span>Next Steps in Firebase Console (One-Time Setup):</span>
+                  </h5>
+                  <ol className="list-decimal list-inside space-y-1.5 text-slate-600 pl-1">
+                    <li>
+                      Go to <b className="text-slate-800">Firebase Console → Firestore Database</b> and click <b className="text-emerald-700">"Create database"</b> (choose your closest region and Start in test mode or production mode).
+                    </li>
+                    <li>
+                      Go to <b className="text-slate-800">Firebase Console → Authentication</b> and click <b className="text-emerald-700">"Get Started"</b>, then enable <b className="text-slate-800">Email/Password</b> and <b className="text-slate-800">Phone</b> providers.
+                    </li>
+                    <li>
+                      Click the <b className="text-amber-700">"Upload Data to Firebase"</b> button above, or run <code className="bg-slate-200 px-1 rounded">node scripts/seedFirebase.mjs</code> in terminal to populate Firestore!
+                    </li>
+                  </ol>
+                </div>
+
+                {/* Environment Variables Reference */}
+                <div className="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-200 space-y-2">
+                  <p className="text-slate-400 font-sans font-semibold">
+                    Current Loaded Environment Configuration:
                   </p>
+                  <div className="text-emerald-400 select-all space-y-1">
+                    <div>VITE_FIREBASE_PROJECT_ID={firebaseConfig.projectId}</div>
+                    <div>VITE_FIREBASE_AUTH_DOMAIN={firebaseConfig.authDomain}</div>
+                    <div>VITE_FIREBASE_STORAGE_BUCKET={firebaseConfig.storageBucket}</div>
+                    <div>VITE_FIREBASE_APP_ID={firebaseConfig.appId}</div>
+                  </div>
                 </div>
-              </div>
-
-              <div className="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-200 space-y-2">
-                <p className="text-slate-400 font-sans font-semibold">
-                  Required Environment Variables (.env / Vercel):
-                </p>
-                <div className="text-emerald-400 select-all">
-                  VITE_FIREBASE_API_KEY=AIzaSy...<br />
-                  VITE_FIREBASE_AUTH_DOMAIN=malhar-tools.firebaseapp.com<br />
-                  VITE_FIREBASE_PROJECT_ID=malhar-tools<br />
-                  VITE_FIREBASE_STORAGE_BUCKET=malhar-tools.appspot.com<br />
-                  VITE_FIREBASE_MESSAGING_SENDER_ID=...<br />
-                  VITE_FIREBASE_APP_ID=1:...<br />
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600">
-                <span className="font-semibold text-slate-800">Security Rules:</span>{' '}
-                Production security rules have been written in <code className="bg-white px-1.5 py-0.5 rounded border">firestore.rules</code> protecting all shop data so only authenticated owners can read/write.
-              </div>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+          </div>
         )}
 
         {/* Global Save button for shop and app tabs */}
