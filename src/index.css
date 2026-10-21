@@ -73,12 +73,12 @@ html {
   color: var(--app-font-color);
 }
 
-[data-custom-font="true"] h1,
-[data-custom-font="true"] h2,
-[data-custom-font="true"] h3,
-[data-custom-font="true"] h4,
-[data-custom-font="true"] h5,
-[data-custom-font="true"] h6 {
+[data-custom-font="true"] h1:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]),
+[data-custom-font="true"] h2:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]),
+[data-custom-font="true"] h3:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]),
+[data-custom-font="true"] h4:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]),
+[data-custom-font="true"] h5:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]),
+[data-custom-font="true"] h6:not([class*="text-white"]):not([class*="text-amber"]):not([class*="text-yellow"]):not([class*="text-[#"]):not([class*="text-slate-1"]):not([class*="text-slate-2"]):not([class*="text-slate-3"]):not([class*="text-slate-4"]) {
   color: var(--app-heading-color, var(--app-font-color));
 }
 
@@ -93,8 +93,16 @@ html {
 }
 
 [data-custom-font="true"] main label,
-[data-custom-font="true"] [role="dialog"] label {
+[data-custom-font="true"] [role="dialog"] label:not(.dark-label) {
   color: var(--app-font-color);
+}
+
+/* Ensure dark authentication modal text remains sharp white/light irrespective of global font settings */
+.auth-dark h1, .auth-dark h2, .auth-dark h3, .auth-dark h4, .auth-dark h5, .auth-dark h6 {
+  color: #ffffff !important;
+}
+.auth-dark label {
+  color: #cbd5e1 !important;
 }
 
 /* Font Weight Scalings */

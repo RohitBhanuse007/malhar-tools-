@@ -16,6 +16,7 @@ export interface ShopUser {
 
 // Local mock user for when Firebase is not yet hooked up to .env
 const MOCK_STORAGE_KEY = 'malhar_tools_mock_user';
+const CUSTOM_PASSWORD_KEY = 'malhar_tools_owner_password';
 
 export async function loginOwner(email: string, password: string): Promise<ShopUser> {
   if (isFirebaseConfigured() && auth) {
@@ -30,6 +31,12 @@ export async function loginOwner(email: string, password: string): Promise<ShopU
       console.error('Firebase login error:', error);
       throw error;
     }
+  }
+
+  // Check if a custom password was set via Mobile OTP reset
+  const savedCustomPassword = localStorage.getItem(CUSTOM_PASSWORD_KEY);
+  if (savedCustomPassword && password !== savedCustomPassword) {
+    throw new Error('Invalid credentials. Password does not match the updated password.');
   }
 
   // Graceful fallback for local evaluation before .env is populated
@@ -90,4 +97,8 @@ export async function resetOwnerPassword(email: string): Promise<void> {
   } else {
     console.log('Password reset link simulated for:', email);
   }
+}
+
+export async function updateOwnerPassword(newPassword: string): Promise<void> {
+  localStorage.setItem(CUSTOM_PASSWORD_KEY, newPassword);
 }

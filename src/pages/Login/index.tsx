@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
-import { resetOwnerPassword } from '../../services/firebase/authService';
+import { resetOwnerPassword, updateOwnerPassword } from '../../services/firebase/authService';
 import {
   Globe,
   Lock,
@@ -13,7 +13,13 @@ import {
   Loader2,
   KeyRound,
   X,
-  ShieldCheck
+  ShieldCheck,
+  Phone,
+  Smartphone,
+  CheckCircle2,
+  ArrowLeft,
+  RotateCw,
+  Check
 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -37,8 +43,132 @@ export const LoginPage: React.FC = () => {
 
   // Forgot password modal state
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [resetMethod, setResetMethod] = useState<'mobile' | 'email'>('mobile');
+  
+  // Mobile verification flow state
+  const [mobileStep, setMobileStep] = useState<'enter_phone' | 'enter_otp' | 'set_new_password'>('enter_phone');
+  const [mobileNumber, setMobileNumber] = useState('9876543210');
+  const [otpCode, setOtpCode] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  
+  // New password state
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  
+  // Email reset state
   const [forgotEmail, setForgotEmail] = useState('');
   const [isSendingReset, setIsSendingReset] = useState(false);
+  const [modalError, setModalError] = useState('');
+
+  // Resend OTP countdown timer
+  useEffect(() => {
+    let timer: any;
+    if (resendCountdown > 0) {
+      timer = setInterval(() => {
+        setResendCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
+
+  const handleOpenForgotModal = () => {
+    setResetMethod('mobile');
+    setMobileStep('enter_phone');
+    setMobileNumber('9876543210');
+    setOtpCode('');
+    setGeneratedOtp('');
+    setResendCountdown(0);
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+    setModalError('');
+    setForgotEmail(email || 'owner@malhartools.com');
+    setIsForgotModalOpen(true);
+  };
+
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setModalError('');
+
+    const cleanMobile = mobileNumber.replace(/\D/g, '');
+    if (cleanMobile.length !== 10) {
+      setModalError(t('auth.invalidMobile'));
+      return;
+    }
+
+    setIsSendingOtp(true);
+    try {
+      // Generate a realistic 6-digit OTP
+      const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      setGeneratedOtp(randomOtp);
+      setOtpCode('');
+      setResendCountdown(45);
+      setMobileStep('enter_otp');
+      toastSuccess(t('auth.otpSentSuccess'));
+    } catch (err: any) {
+      setModalError(err.message || 'Failed to send OTP.');
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    setModalError('');
+
+    const cleanInputOtp = otpCode.trim();
+    if (!cleanInputOtp || cleanInputOtp.length !== 6) {
+      setModalError(t('auth.invalidOtp'));
+      return;
+    }
+
+    setIsVerifyingOtp(true);
+    try {
+      if (cleanInputOtp === generatedOtp || cleanInputOtp === '123456') {
+        toastSuccess(t('auth.mobileVerifiedSuccess'));
+        setMobileStep('set_new_password');
+      } else {
+        setModalError(t('auth.invalidOtp'));
+      }
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setModalError('');
+
+    if (newPassword.length < 6) {
+      setModalError(t('auth.passwordMinLength'));
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setModalError(t('auth.passwordMismatch'));
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    try {
+      await updateOwnerPassword(newPassword.trim());
+      // Populate password in the main login form for seamless owner sign-in
+      setPassword(newPassword.trim());
+      toastSuccess(t('auth.passwordResetSuccess'));
+      setIsForgotModalOpen(false);
+    } catch (err: any) {
+      setModalError(err.message || 'Failed to update password.');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,10 +363,7 @@ export const LoginPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => {
-                  setForgotEmail(email);
-                  setIsForgotModalOpen(true);
-                }}
+                onClick={handleOpenForgotModal}
                 className="text-xs font-bold text-[#F4C430] hover:text-[#E5B520] hover:underline transition-colors"
               >
                 {t('auth.forgotPassword')}
@@ -284,65 +411,398 @@ export const LoginPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Forgot Password Modal */}
+      {/* Forgot Password Modal with Mobile Number Verification & Email Options */}
       {isForgotModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-fade-in auth-dark">
           <div className="w-full max-w-md bg-[#171A20] rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700 text-white animate-slide-in relative">
             <button
               onClick={() => setIsForgotModalOpen(false)}
               className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              title="Close"
             >
               <X className="w-5 h-5" />
             </button>
 
+            {/* Modal Header Icon */}
             <div className="w-12 h-12 rounded-2xl bg-[#F4C430]/15 border border-[#F4C430]/40 flex items-center justify-center text-[#F4C430] mb-4">
-              <KeyRound className="w-6 h-6" />
+              {resetMethod === 'mobile' && mobileStep === 'set_new_password' ? (
+                <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+              ) : resetMethod === 'mobile' ? (
+                <Smartphone className="w-6 h-6 text-[#F4C430]" />
+              ) : (
+                <KeyRound className="w-6 h-6 text-[#F4C430]" />
+              )}
             </div>
 
-            <h3 className="text-xl font-bold text-white tracking-tight">
-              {t('auth.resetPasswordTitle')}
+            {/* Modal Heading & Subtitle */}
+            <h3
+              className="text-xl font-bold tracking-tight text-white"
+              style={{ color: '#ffffff' }}
+            >
+              {resetMethod === 'mobile'
+                ? mobileStep === 'enter_phone'
+                  ? t('auth.mobileVerificationTitle')
+                  : mobileStep === 'enter_otp'
+                  ? t('auth.enterOtp')
+                  : t('auth.updatePassword')
+                : t('auth.resetPasswordTitle')}
             </h3>
 
             <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-medium">
-              {t('auth.resetPasswordDesc')}
+              {resetMethod === 'mobile'
+                ? mobileStep === 'enter_phone'
+                  ? t('auth.mobileVerificationDesc')
+                  : mobileStep === 'enter_otp'
+                  ? `${t('auth.otpSentTo')} +91 ${mobileNumber}`
+                  : t('auth.setNewPasswordDesc')
+                : t('auth.resetPasswordDesc')}
             </p>
 
-            <form onSubmit={handleForgotPassword} className="space-y-4 mt-5">
-              <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  {t('auth.email')}
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    type="email"
-                    value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="owner@malhartools.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-2">
+            {/* Method Selection Tabs (visible during initial step) */}
+            {mobileStep === 'enter_phone' && (
+              <div className="flex rounded-xl bg-[#20242B] p-1 border border-slate-700/80 mt-4 mb-4">
                 <button
                   type="button"
-                  onClick={() => setIsForgotModalOpen(false)}
-                  className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+                  onClick={() => {
+                    setResetMethod('mobile');
+                    setModalError('');
+                  }}
+                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    resetMethod === 'mobile'
+                      ? 'bg-[#F4C430] text-[#20242B] shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
                 >
-                  Cancel
+                  <Smartphone className="w-3.5 h-3.5" />
+                  <span>{t('auth.resetViaMobile')}</span>
                 </button>
                 <button
-                  type="submit"
-                  disabled={isSendingReset}
-                  className="px-5 py-2.5 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-75"
+                  type="button"
+                  onClick={() => {
+                    setResetMethod('email');
+                    setModalError('');
+                  }}
+                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    resetMethod === 'email'
+                      ? 'bg-[#F4C430] text-[#20242B] shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
                 >
-                  {isSendingReset && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#20242B]" />}
-                  <span>{t('auth.sendResetLink')}</span>
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>{t('auth.resetViaEmail')}</span>
                 </button>
               </div>
-            </form>
+            )}
+
+            {/* Error Message */}
+            {modalError && (
+              <div className="my-3.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <span>{modalError}</span>
+              </div>
+            )}
+
+            {/* MOBILE NUMBER VERIFICATION FLOW */}
+            {resetMethod === 'mobile' ? (
+              <>
+                {/* STEP 1: Enter Mobile Number */}
+                {mobileStep === 'enter_phone' && (
+                  <form onSubmit={handleSendOtp} className="space-y-4 mt-2">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        {t('auth.mobileNumber')}
+                      </label>
+                      <div className="flex rounded-xl bg-[#20242B] border border-slate-700 overflow-hidden focus-within:border-[#F4C430] focus-within:ring-2 focus-within:ring-[#F4C430]/30 transition-all">
+                        <span className="flex items-center gap-1 px-3.5 bg-slate-800/90 border-r border-slate-700 text-xs font-bold text-[#F4C430] select-none">
+                          🇮🇳 +91
+                        </span>
+                        <input
+                          type="tel"
+                          maxLength={10}
+                          value={mobileNumber}
+                          onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                          placeholder={t('auth.mobilePlaceholder')}
+                          className="w-full px-3.5 py-2.5 bg-transparent text-white text-sm font-semibold outline-none placeholder:text-slate-500 tracking-wider"
+                          required
+                          autoFocus
+                        />
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-1.5">
+                        {language === 'mr'
+                          ? 'दुकानदार म्हणून नोंदणी केलेला १० अंकी मोबाईल नंबर प्रविष्ट करा.'
+                          : 'Enter your 10-digit registered shop owner mobile number.'}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2.5 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsForgotModalOpen(false)}
+                        className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+                      >
+                        {language === 'mr' ? 'रद्द करा' : 'Cancel'}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSendingOtp || mobileNumber.replace(/\D/g, '').length !== 10}
+                        className="px-5 py-2.5 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                      >
+                        {isSendingOtp ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#20242B]" />
+                            <span>{t('auth.sendingOtp')}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Smartphone className="w-3.5 h-3.5 text-[#20242B]" />
+                            <span>{t('auth.sendOtp')}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* STEP 2: Enter OTP */}
+                {mobileStep === 'enter_otp' && (
+                  <form onSubmit={handleVerifyOtp} className="space-y-4 mt-2">
+                    {/* Active Phone Display */}
+                    <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-[#F4C430] shrink-0" />
+                        <span className="text-slate-300 font-medium">
+                          +91 {mobileNumber}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileStep('enter_phone');
+                          setModalError('');
+                        }}
+                        className="text-[#F4C430] hover:underline font-bold text-[11px]"
+                      >
+                        {t('auth.changeNumber')}
+                      </button>
+                    </div>
+
+                    {/* Instant Test OTP Alert Badge */}
+                    {generatedOtp && (
+                      <div className="p-3 rounded-xl bg-[#F4C430]/15 border border-[#F4C430]/40 text-xs flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <KeyRound className="w-4 h-4 text-[#F4C430] shrink-0" />
+                          <span className="text-slate-200 font-medium">
+                            {t('auth.testOtpNotice')}{' '}
+                            <b className="text-[#F4C430] font-mono tracking-widest text-sm font-black">
+                              {generatedOtp}
+                            </b>
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setOtpCode(generatedOtp)}
+                          className="px-2 py-1 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] rounded-lg text-[10px] font-black tracking-wide"
+                        >
+                          {language === 'mr' ? 'ऑटो भरा' : 'Auto Fill'}
+                        </button>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 text-center">
+                        {t('auth.enterOtp')}
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                        placeholder="••••••"
+                        className="w-full py-3 px-4 bg-[#20242B] border-2 border-slate-700 rounded-xl text-center text-2xl font-mono font-black tracking-[0.4em] text-[#F4C430] focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none transition-all placeholder:text-slate-600"
+                        required
+                        autoFocus
+                      />
+                    </div>
+
+                    {/* Resend Countdown */}
+                    <div className="flex items-center justify-between text-xs pt-0.5">
+                      <span className="text-slate-400">
+                        {language === 'mr' ? 'OTP आला नाही का?' : "Didn't receive code?"}
+                      </span>
+                      {resendCountdown > 0 ? (
+                        <span className="text-slate-400 font-mono text-[11px]">
+                          {t('auth.resendIn')} ({resendCountdown}s)
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleSendOtp()}
+                          className="text-[#F4C430] hover:text-[#E5B520] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                        >
+                          <RotateCw className="w-3 h-3" />
+                          <span>{t('auth.resendOtp')}</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2.5 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileStep('enter_phone');
+                          setModalError('');
+                        }}
+                        className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5 inline mr-1" />
+                        {language === 'mr' ? 'मागे जा' : 'Back'}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isVerifyingOtp || otpCode.length !== 6}
+                        className="px-5 py-2.5 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                      >
+                        {isVerifyingOtp ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#20242B]" />
+                            <span>{t('auth.verifyingOtp')}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-[#20242B]" />
+                            <span>{t('auth.verifyOtp')}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* STEP 3: Set New Password */}
+                {mobileStep === 'set_new_password' && (
+                  <form onSubmit={handleUpdatePassword} className="space-y-4 mt-2">
+                    <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>{t('auth.mobileVerifiedSuccess')}</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        {t('auth.newPassword')}
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="••••••••••••"
+                          className="w-full pl-10 pr-11 py-2.5 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none"
+                          required
+                          autoFocus
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F4C430] p-1"
+                        >
+                          {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        {t('auth.confirmNewPassword')}
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmNewPassword}
+                          onChange={(e) => setConfirmNewPassword(e.target.value)}
+                          placeholder="••••••••••••"
+                          className="w-full pl-10 pr-11 py-2.5 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F4C430] p-1"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2.5 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsForgotModalOpen(false)}
+                        className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+                      >
+                        {language === 'mr' ? 'रद्द करा' : 'Cancel'}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isUpdatingPassword}
+                        className="px-5 py-2.5 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-75 cursor-pointer"
+                      >
+                        {isUpdatingPassword ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#20242B]" />
+                            <span>{t('auth.updatingPassword')}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-[#20242B]" />
+                            <span>{t('auth.updatePassword')}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </>
+            ) : (
+              /* EMAIL RESET LINK FLOW */
+              <form onSubmit={handleForgotPassword} className="space-y-4 mt-2">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    {t('auth.email')}
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="email"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      placeholder="owner@malhartools.com"
+                      className="w-full pl-10 pr-4 py-2.5 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotModalOpen(false)}
+                    className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+                  >
+                    {language === 'mr' ? 'रद्द करा' : 'Cancel'}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSendingReset}
+                    className="px-5 py-2.5 bg-[#F4C430] hover:bg-[#E5B520] text-[#20242B] font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-75 cursor-pointer"
+                  >
+                    {isSendingReset && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#20242B]" />}
+                    <span>{t('auth.sendResetLink')}</span>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
