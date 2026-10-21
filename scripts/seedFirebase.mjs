@@ -532,12 +532,12 @@ async function seedData() {
   try {
     console.log('Authenticating as Malhar Tools Owner (bhanusedarshan@gmail.com)...');
     try {
-      await signInWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'malhar123');
+      await signInWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'db@2002');
       console.log('✓ Successfully signed in to Firebase Auth as bhanusedarshan@gmail.com.');
     } catch (authErr) {
       if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential') {
         try {
-          await createUserWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'malhar123');
+          await createUserWithEmailAndPassword(auth, 'bhanusedarshan@gmail.com', 'db@2002');
           console.log('✓ Successfully registered and signed in bhanusedarshan@gmail.com.');
         } catch (createErr) {
           console.warn('Notice on user registration:', createErr.message);

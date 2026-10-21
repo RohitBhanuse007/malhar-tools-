@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
@@ -24,21 +24,62 @@ export const LoginPage: React.FC = () => {
 
   // Remember me from localStorage
   const [rememberMe, setRememberMe] = useState(() => {
-    return localStorage.getItem('malhar_tools_remember_me') === 'true';
+    try {
+      return localStorage.getItem('malhar_tools_remember_me') !== 'false';
+    } catch {
+      return true;
+    }
   });
 
   const [email, setEmail] = useState(() => {
-    const saved = localStorage.getItem('malhar_tools_saved_email');
-    if (saved && saved !== 'owner@malhartools.com') {
-      return saved;
+    try {
+      const saved = localStorage.getItem('malhar_tools_saved_email');
+      if (saved && saved !== 'owner@malhartools.com') {
+        return saved;
+      }
+    } catch {
+      // ignore
     }
     return 'bhanusedarshan@gmail.com';
   });
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(() => {
+    try {
+      const saved = localStorage.getItem('malhar_tools_saved_password');
+      if (saved && saved !== 'password@123' && saved !== 'malhar123') {
+        return saved;
+      }
+    } catch {
+      // ignore
+    }
+    return 'db@2002';
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Proactively migrate any legacy cached credentials so user gets latest email & password
+  useEffect(() => {
+    try {
+      const savedEmail = localStorage.getItem('malhar_tools_saved_email');
+      if (savedEmail === 'owner@malhartools.com') {
+        localStorage.setItem('malhar_tools_saved_email', 'bhanusedarshan@gmail.com');
+        setEmail('bhanusedarshan@gmail.com');
+      }
+      const savedPass = localStorage.getItem('malhar_tools_saved_password');
+      if (savedPass === 'password@123' || savedPass === 'malhar123') {
+        localStorage.setItem('malhar_tools_saved_password', 'db@2002');
+        setPassword('db@2002');
+      }
+      const customPass = localStorage.getItem('malhar_tools_owner_password');
+      if (customPass === 'password@123' || customPass === 'malhar123') {
+        localStorage.setItem('malhar_tools_owner_password', 'db@2002');
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,12 +94,14 @@ export const LoginPage: React.FC = () => {
     try {
       await login(email.trim(), password);
 
-      // Save or remove remembered email
+      // Save or remove remembered credentials
       if (rememberMe) {
         localStorage.setItem('malhar_tools_saved_email', email.trim());
+        localStorage.setItem('malhar_tools_saved_password', password.trim());
         localStorage.setItem('malhar_tools_remember_me', 'true');
       } else {
         localStorage.removeItem('malhar_tools_saved_email');
+        localStorage.removeItem('malhar_tools_saved_password');
         localStorage.setItem('malhar_tools_remember_me', 'false');
       }
 
@@ -190,7 +233,7 @@ export const LoginPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="db@2002"
                   className="w-full pl-10 pr-11 py-3 bg-[#20242B] border border-slate-700 rounded-xl text-white text-sm font-semibold focus:border-[#F4C430] focus:ring-2 focus:ring-[#F4C430]/30 outline-none transition-all placeholder:text-slate-500"
                   required
                   autoComplete="current-password"

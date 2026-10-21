@@ -29,6 +29,26 @@ const CUSTOM_PASSWORD_KEY = 'malhar_tools_owner_password';
 const RATE_LIMIT_KEY = 'malhar_tools_otp_rate_limit';
 const ACTIVE_OTP_SESSION_KEY = 'malhar_tools_active_otp_session';
 
+export const DEFAULT_OWNER_PASSWORD = 'db@2002';
+
+/**
+ * Returns the active authorized owner password, defaulting to 'db@2002'
+ * and migrating any legacy 'password@123' or 'malhar123' entries.
+ */
+export function getAuthorizedOwnerPassword(): string {
+  if (typeof window === 'undefined') return DEFAULT_OWNER_PASSWORD;
+  try {
+    const custom = localStorage.getItem(CUSTOM_PASSWORD_KEY);
+    if (!custom || custom === 'password@123' || custom === 'malhar123') {
+      localStorage.setItem(CUSTOM_PASSWORD_KEY, DEFAULT_OWNER_PASSWORD);
+      return DEFAULT_OWNER_PASSWORD;
+    }
+    return custom;
+  } catch {
+    return DEFAULT_OWNER_PASSWORD;
+  }
+}
+
 interface RateLimitData {
   requestTimes: number[];
   lastRequestTime: number;
@@ -440,10 +460,15 @@ export async function loginOwner(email: string, password: string): Promise<ShopU
   const cleanEmail = email.trim();
   const cleanPassword = password.trim();
 
-  // 1. Check custom password if set via Mobile OTP reset
-  const savedCustomPassword = localStorage.getItem(CUSTOM_PASSWORD_KEY);
-  if (savedCustomPassword && cleanPassword !== savedCustomPassword) {
-    throw new Error('Invalid credentials. Password does not match your updated password.');
+  // Reject outdated legacy passwords
+  if (cleanPassword === 'password@123' || cleanPassword === 'malhar123') {
+    throw new Error('Old password is no longer valid. The password has been changed to db@2002.');
+  }
+
+  // 1. Verify against authorized owner password (db@2002 or updated OTP password)
+  const authorizedPassword = getAuthorizedOwnerPassword();
+  if (cleanPassword !== authorizedPassword) {
+    throw new Error('Invalid credentials. Password does not match your current owner password.');
   }
 
   // 2. Try Firebase Authentication if configured
@@ -479,8 +504,8 @@ export async function loginOwner(email: string, password: string): Promise<ShopU
         }
       }
 
-      // If Firebase Auth is not yet enabled in Console (auth/configuration-not-found or auth/operation-not-allowed)
-      // or network error, seamlessly fall back to local owner session so the owner is never locked out!
+      // If Firebase Auth is not yet enabled in Console or network error,
+      // seamlessly authenticate since password was verified against authorizedPassword (db@2002)
       if (
         error.code === 'auth/configuration-not-found' ||
         error.code === 'auth/operation-not-allowed' ||
@@ -489,24 +514,6 @@ export async function loginOwner(email: string, password: string): Promise<ShopU
         error.code === 'auth/user-not-found' ||
         error.code === 'auth/invalid-credential'
       ) {
-        if (cleanEmail && cleanPassword.length >= 6) {
-          const fallbackUser: ShopUser = {
-            uid: 'owner-local-admin',
-            email: cleanEmail,
-            displayName: 'Malhar Tools Owner',
-          };
-          localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(fallbackUser));
-          return fallbackUser;
-        }
-      }
-
-      // If incorrect password for existing account
-      if (error.code === 'auth/wrong-password') {
-        throw new Error('Incorrect password. Please try again or use Forgot Password.');
-      }
-
-      // Standard fallback for any other setup condition
-      if (cleanEmail && cleanPassword.length >= 6) {
         const fallbackUser: ShopUser = {
           uid: 'owner-local-admin',
           email: cleanEmail,
@@ -516,22 +523,30 @@ export async function loginOwner(email: string, password: string): Promise<ShopU
         return fallbackUser;
       }
 
-      throw error;
+      // If incorrect password for existing account
+      if (error.code === 'auth/wrong-password') {
+        throw new Error('Incorrect password. Please try again or use Forgot Password.');
+      }
+
+      // Standard fallback for any other setup condition
+      const fallbackUser: ShopUser = {
+        uid: 'owner-local-admin',
+        email: cleanEmail,
+        displayName: 'Malhar Tools Owner',
+      };
+      localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(fallbackUser));
+      return fallbackUser;
     }
   }
 
   // 3. Local Evaluation fallback
-  if (cleanEmail && cleanPassword.length >= 6) {
-    const mockUser: ShopUser = {
-      uid: 'owner-local-admin',
-      email: cleanEmail,
-      displayName: 'Malhar Tools Owner',
-    };
-    localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(mockUser));
-    return mockUser;
-  } else {
-    throw new Error('Invalid credentials. Password must be at least 6 characters.');
-  }
+  const mockUser: ShopUser = {
+    uid: 'owner-local-admin',
+    email: cleanEmail,
+    displayName: 'Malhar Tools Owner',
+  };
+  localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(mockUser));
+  return mockUser;
 }
 
 export async function logoutOwner(): Promise<void> {
