@@ -102,7 +102,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       currentStock: Number(formData.currentStock),
       lowStockThreshold: Number(formData.lowStockThreshold),
       description: formData.description.trim(),
-      hsnCode: formData.hsnCode.trim() || undefined,
+      hsnCode: formData.hsnCode.trim() || '',
       gstRate: Number(formData.gstRate) || 18,
     });
   };

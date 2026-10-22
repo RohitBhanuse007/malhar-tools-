@@ -12,7 +12,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db, SHOP_ID, isFirebaseConfigured } from './config';
+import { db, SHOP_ID, isFirebaseConfigured, removeUndefinedFields } from './config';
 import { Customer, CustomerPayment } from '../../types';
 
 const CUSTOMERS_COLLECTION = `shops/${SHOP_ID}/customers`;
@@ -73,7 +73,7 @@ export async function createCustomer(data: {
   const firestore = db;
 
   if (isFirebaseConfigured() && firestore) {
-    const docRef = await addDoc(collection(firestore, CUSTOMERS_COLLECTION), {
+    const docRef = await addDoc(collection(firestore, CUSTOMERS_COLLECTION), removeUndefinedFields({
       name: data.name,
       contactNumber: data.contactNumber,
       address: data.address || '',
@@ -83,7 +83,7 @@ export async function createCustomer(data: {
       notes: data.notes || '',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-    });
+    }));
     return docRef.id;
   }
 
@@ -177,7 +177,7 @@ export async function recordCustomerPayment(paymentData: {
       const payRef = doc(collection(firestore, PAYMENTS_COLLECTION));
       newPaymentId = payRef.id;
 
-      transaction.set(payRef, {
+      transaction.set(payRef, removeUndefinedFields({
         customerId: paymentData.customerId,
         customerName: customer.name,
         amount,
@@ -186,7 +186,7 @@ export async function recordCustomerPayment(paymentData: {
         reference: paymentData.reference || '',
         notes: paymentData.notes || '',
         createdAt: serverTimestamp(),
-      });
+      }));
     });
 
     return newPaymentId;

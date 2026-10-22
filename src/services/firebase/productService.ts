@@ -11,7 +11,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db, SHOP_ID, isFirebaseConfigured } from './config';
+import { db, SHOP_ID, isFirebaseConfigured, removeUndefinedFields } from './config';
 import { Product } from '../../types';
 
 const PRODUCTS_COLLECTION = `shops/${SHOP_ID}/products`;
@@ -84,12 +84,12 @@ export async function getProductById(id: string): Promise<Product | null> {
 export async function createProduct(productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
   const firestore = db;
   if (isFirebaseConfigured() && firestore) {
-    const docRef = await addDoc(collection(firestore, PRODUCTS_COLLECTION), {
+    const docRef = await addDoc(collection(firestore, PRODUCTS_COLLECTION), removeUndefinedFields({
       ...productData,
       isDeleted: false,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-    });
+    }));
     return docRef.id;
   }
 
@@ -110,10 +110,10 @@ export async function updateProduct(id: string, updates: Partial<Product>): Prom
   const firestore = db;
   if (isFirebaseConfigured() && firestore) {
     const docRef = doc(firestore, PRODUCTS_COLLECTION, id);
-    await updateDoc(docRef, {
+    await updateDoc(docRef, removeUndefinedFields({
       ...updates,
       updatedAt: serverTimestamp(),
-    });
+    }));
     return;
   }
 

@@ -58,3 +58,33 @@ export { app, auth, db };
 
 // Primary Shop document ID for Malhar Tools
 export const SHOP_ID = 'malhar-tools';
+
+/**
+ * Recursively strips keys with undefined values from an object,
+ * preventing Firestore "Unsupported field value: undefined" errors.
+ */
+export function removeUndefinedFields<T extends Record<string, any>>(obj: T): T {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  const cleanObj: Record<string, any> = {};
+
+  for (const [key, val] of Object.entries(obj)) {
+    if (val !== undefined) {
+      if (
+        val !== null &&
+        typeof val === 'object' &&
+        !Array.isArray(val) &&
+        !(val instanceof Date) &&
+        typeof (val as any).toMillis !== 'function'
+      ) {
+        cleanObj[key] = removeUndefinedFields(val);
+      } else {
+        cleanObj[key] = val;
+      }
+    }
+  }
+
+  return cleanObj as T;
+}

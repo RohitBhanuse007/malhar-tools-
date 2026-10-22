@@ -8,7 +8,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db, SHOP_ID, isFirebaseConfigured } from './config';
+import { db, SHOP_ID, isFirebaseConfigured, removeUndefinedFields } from './config';
 import { Purchase, Product } from '../../types';
 import { recordStockMovement } from './stockMovementService';
 
@@ -68,13 +68,16 @@ export async function createPurchase(
       const purchaseRef = doc(collection(firestore, PURCHASES_COLLECTION));
       newPurchaseId = purchaseRef.id;
 
-      transaction.set(purchaseRef, {
+      transaction.set(purchaseRef, removeUndefinedFields({
         ...purchaseData,
         quantity,
         purchasePrice: price,
         totalAmount,
+        supplierGstin: purchaseData.supplierGstin || '',
+        hsnCode: purchaseData.hsnCode || '',
+        invoiceNumber: purchaseData.invoiceNumber || '',
         createdAt: serverTimestamp(),
-      });
+      }));
 
       // 2. Atomically increase stock
       transaction.update(productRef, {
@@ -84,7 +87,7 @@ export async function createPurchase(
 
       // 3. Record stock movement
       const movementRef = doc(collection(firestore, `shops/${SHOP_ID}/stockMovements`));
-      transaction.set(movementRef, {
+      transaction.set(movementRef, removeUndefinedFields({
         productId: purchaseData.productId,
         productName: purchaseData.productName,
         type: 'PURCHASE',
@@ -95,7 +98,7 @@ export async function createPurchase(
         reason: `Purchase from ${purchaseData.supplierName}`,
         date: purchaseData.date,
         createdAt: serverTimestamp(),
-      });
+      }));
     });
 
     return newPurchaseId;

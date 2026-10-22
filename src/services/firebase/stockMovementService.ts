@@ -7,7 +7,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db, SHOP_ID, isFirebaseConfigured } from './config';
+import { db, SHOP_ID, isFirebaseConfigured, removeUndefinedFields } from './config';
 import { StockMovement } from '../../types';
 
 const MOVEMENTS_COLLECTION = `shops/${SHOP_ID}/stockMovements`;
@@ -31,10 +31,10 @@ export async function recordStockMovement(
 ): Promise<string> {
   const firestore = db;
   if (isFirebaseConfigured() && firestore) {
-    const docRef = await addDoc(collection(firestore, MOVEMENTS_COLLECTION), {
+    const docRef = await addDoc(collection(firestore, MOVEMENTS_COLLECTION), removeUndefinedFields({
       ...movement,
       createdAt: serverTimestamp(),
-    });
+    }));
     return docRef.id;
   }
 

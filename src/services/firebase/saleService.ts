@@ -8,7 +8,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db, SHOP_ID, isFirebaseConfigured } from './config';
+import { db, SHOP_ID, isFirebaseConfigured, removeUndefinedFields } from './config';
 import { Sale, Product, Customer } from '../../types';
 import { recordStockMovement } from './stockMovementService';
 
@@ -71,16 +71,21 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
       const saleRef = doc(collection(firestore, SALES_COLLECTION));
       newSaleId = saleRef.id;
 
-      transaction.set(saleRef, {
+      const salePayload = removeUndefinedFields({
         ...saleData,
         quantity,
         sellingPrice: price,
         totalAmount,
         customerName: saleData.customerName || '',
         customerId: saleData.customerId || '',
+        customerGstin: saleData.customerGstin || '',
+        invoiceNumber: saleData.invoiceNumber || '',
+        hsnCode: saleData.hsnCode || '',
         notes: saleData.notes || '',
         createdAt: serverTimestamp(),
       });
+
+      transaction.set(saleRef, salePayload);
 
       // 3. Atomically decrease stock
       transaction.update(productRef, {
@@ -90,7 +95,7 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
 
       // 4. Record stock movement
       const movementRef = doc(collection(firestore, `shops/${SHOP_ID}/stockMovements`));
-      transaction.set(movementRef, {
+      transaction.set(movementRef, removeUndefinedFields({
         productId: saleData.productId,
         productName: saleData.productName,
         type: 'SALE',
@@ -101,7 +106,7 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
         reason: `Sale to ${saleData.customerName || 'Cash counter'}`,
         date: saleData.date,
         createdAt: serverTimestamp(),
-      });
+      }));
 
       // 5. If linked to customer credit
       if (saleData.customerId) {
@@ -126,7 +131,7 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
 
           if (initialPaid > 0) {
             const payRef = doc(collection(firestore, PAYMENTS_COLLECTION));
-            transaction.set(payRef, {
+            transaction.set(payRef, removeUndefinedFields({
               customerId: saleData.customerId,
               customerName: cust.name,
               amount: initialPaid,
@@ -134,7 +139,7 @@ export async function createSale(saleData: CreateSaleInput): Promise<string> {
               paymentMode: saleData.paymentMode,
               reference: `Initial down payment on sale #${newSaleId.slice(-4)}`,
               createdAt: serverTimestamp(),
-            });
+            }));
           }
         }
       }
