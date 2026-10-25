@@ -97,10 +97,10 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
     state: shopSettings?.state || 'Maharashtra',
     stateCode: shopSettings?.stateCode || '27',
     defaultGstRate: shopSettings?.defaultGstRate || 18,
-    bankName: shopSettings?.bankName || 'State Bank of India',
-    bankAccountNumber: shopSettings?.bankAccountNumber || '389012345678',
-    bankIfsc: shopSettings?.bankIfsc || 'SBIN0001234',
-    bankBranch: shopSettings?.bankBranch || 'Main Market Branch, Sangli',
+    bankName: shopSettings?.bankName || '',
+    bankAccountNumber: shopSettings?.bankAccountNumber || '',
+    bankIfsc: shopSettings?.bankIfsc || '',
+    bankBranch: shopSettings?.bankBranch || '',
     invoicePrefix: shopSettings?.invoicePrefix || 'MT/26-27/',
   });
   const [isSavingGst, setIsSavingGst] = useState(false);
@@ -113,10 +113,10 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
         state: shopSettings.state || 'Maharashtra',
         stateCode: shopSettings.stateCode || '27',
         defaultGstRate: shopSettings.defaultGstRate || 18,
-        bankName: shopSettings.bankName || 'State Bank of India',
-        bankAccountNumber: shopSettings.bankAccountNumber || '389012345678',
-        bankIfsc: shopSettings.bankIfsc || 'SBIN0001234',
-        bankBranch: shopSettings.bankBranch || 'Main Market Branch, Sangli',
+        bankName: shopSettings.bankName || '',
+        bankAccountNumber: shopSettings.bankAccountNumber || '',
+        bankIfsc: shopSettings.bankIfsc || '',
+        bankBranch: shopSettings.bankBranch || '',
         invoicePrefix: shopSettings.invoicePrefix || 'MT/26-27/',
       });
     }

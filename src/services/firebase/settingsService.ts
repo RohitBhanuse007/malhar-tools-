@@ -47,10 +47,10 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   tradeName: 'Malhar Tools Hardware & Spares',
   gstScheme: 'regular',
   defaultGstRate: 18,
-  bankName: 'State Bank of India',
-  bankAccountNumber: '389012345678',
-  bankIfsc: 'SBIN0001234',
-  bankBranch: 'Main Market Branch, Sangli',
+  bankName: '',
+  bankAccountNumber: '',
+  bankIfsc: '',
+  bankBranch: '',
   invoicePrefix: 'MT/26-27/',
   invoiceTerms: '1. Goods once sold will not be taken back without original invoice. 2. Warranty/guarantee as per manufacturer terms. 3. Subject to Sangli jurisdiction.',
   // Font & Appearance Defaults
@@ -84,6 +84,12 @@ function getLocalSettings(): ShopSettings {
       }
       if (!parsed.gstin || parsed.gstin === '27AABCM1234F1Z5') {
         parsed.gstin = '27AMWPB3781F1ZR';
+      }
+      if (parsed.bankAccountNumber === '389012345678') {
+        parsed.bankName = '';
+        parsed.bankAccountNumber = '';
+        parsed.bankIfsc = '';
+        parsed.bankBranch = '';
       }
       return {
         ...DEFAULT_SHOP_SETTINGS,

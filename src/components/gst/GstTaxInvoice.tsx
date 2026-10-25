@@ -237,7 +237,7 @@ export const GstTaxInvoice: React.FC<GstTaxInvoiceProps> = ({
 
       {/* Tax Breakdown & Summary Box */}
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-300 pt-4">
-        {/* Left Side: Amount in Words & Bank Details */}
+        {/* Left Side: Amount in Words */}
         <div className="space-y-3">
           <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200">
             <span className="text-[10px] font-bold text-amber-900 uppercase block">
@@ -246,22 +246,6 @@ export const GstTaxInvoice: React.FC<GstTaxInvoiceProps> = ({
             <p className="text-xs font-bold text-slate-900 italic mt-0.5">
               {words}
             </p>
-          </div>
-
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] space-y-1">
-            <span className="font-bold text-slate-800 uppercase text-[10px] block">
-              Bank Details for Electronic Transfer
-            </span>
-            <div className="grid grid-cols-2 gap-x-2">
-              <span>Bank Name:</span>
-              <span className="font-bold text-slate-900">{shopSettings?.bankName || 'State Bank of India'}</span>
-              <span>Account Number:</span>
-              <span className="font-mono font-bold text-slate-900">{shopSettings?.bankAccountNumber || '389012345678'}</span>
-              <span>IFSC Code:</span>
-              <span className="font-mono font-bold text-slate-900">{shopSettings?.bankIfsc || 'SBIN0001234'}</span>
-              <span>Branch:</span>
-              <span className="text-slate-700">{shopSettings?.bankBranch || 'Main Market Branch, Sangli'}</span>
-            </div>
           </div>
         </div>
 
