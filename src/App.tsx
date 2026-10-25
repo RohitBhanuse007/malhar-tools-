@@ -320,6 +320,9 @@ export const App: React.FC = () => {
           products={products}
           customers={customers}
           shopSettings={shopSettings}
+          onAddSale={async (data: CreateSaleInput) => {
+            await createSale(data);
+          }}
           onSaveSettings={async (updated) => {
             const saved = await updateShopSettings(updated);
             setShopSettings(saved);
