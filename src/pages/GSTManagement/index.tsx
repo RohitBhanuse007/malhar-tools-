@@ -388,22 +388,38 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <FileSpreadsheet className="w-6 h-6 text-amber-600" />
-            <span>{t('gst.title')}</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            {t('gst.subtitle')}
-          </p>
+      {/* Header with Malhar Tools Logo */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-amber-50/70 via-white to-amber-50/40 p-4 sm:p-5 rounded-2xl border border-amber-200/80 shadow-xs">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black border border-amber-500/40 p-1.5 shrink-0 overflow-hidden shadow-md flex items-center justify-center">
+            <img
+              src={shopSettings?.logoUrl || '/logo.png'}
+              alt="Malhar Tools Logo"
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/logo.png';
+              }}
+            />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <span>{t('gst.title')}</span>
+              </h1>
+              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                {shopSettings?.shopName || 'Malhar Tools'}
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
+              {t('gst.subtitle')}
+            </p>
+          </div>
         </div>
 
         {/* Quick Shop GSTIN Badge */}
-        <div className="px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-xs font-semibold text-slate-800 flex items-center gap-2 shrink-0">
-          <Building2 className="w-4 h-4 text-amber-700" />
-          <span>GSTIN: <strong className="font-mono text-slate-950">{shopSettings?.gstin || '27AMWPB3781F1ZR'}</strong></span>
+        <div className="px-3.5 py-2 rounded-xl bg-white border border-amber-300 text-xs font-semibold text-slate-800 flex items-center gap-2 shrink-0 shadow-xs">
+          <Building2 className="w-4 h-4 text-amber-600" />
+          <span>GSTIN: <strong className="font-mono text-slate-950 font-bold">{shopSettings?.gstin || '27AMWPB3781F1ZR'}</strong></span>
         </div>
       </div>
 
