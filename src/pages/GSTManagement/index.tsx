@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   FileSpreadsheet,
   Printer,
@@ -92,7 +92,7 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
 
   // GST Settings form state
   const [gstForm, setGstForm] = useState({
-    gstin: shopSettings?.gstin || '27AABCM1234F1Z5',
+    gstin: shopSettings?.gstin || '27AMWPB3781F1ZR',
     tradeName: shopSettings?.tradeName || 'Malhar Tools Hardware & Spares',
     state: shopSettings?.state || 'Maharashtra',
     stateCode: shopSettings?.stateCode || '27',
@@ -104,6 +104,23 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
     invoicePrefix: shopSettings?.invoicePrefix || 'MT/26-27/',
   });
   const [isSavingGst, setIsSavingGst] = useState(false);
+
+  useEffect(() => {
+    if (shopSettings) {
+      setGstForm({
+        gstin: shopSettings.gstin || '27AMWPB3781F1ZR',
+        tradeName: shopSettings.tradeName || 'Malhar Tools Hardware & Spares',
+        state: shopSettings.state || 'Maharashtra',
+        stateCode: shopSettings.stateCode || '27',
+        defaultGstRate: shopSettings.defaultGstRate || 18,
+        bankName: shopSettings.bankName || 'State Bank of India',
+        bankAccountNumber: shopSettings.bankAccountNumber || '389012345678',
+        bankIfsc: shopSettings.bankIfsc || 'SBIN0001234',
+        bankBranch: shopSettings.bankBranch || 'Main Market Branch, Sangli',
+        invoicePrefix: shopSettings.invoicePrefix || 'MT/26-27/',
+      });
+    }
+  }, [shopSettings]);
 
   const shopStateCode = shopSettings?.stateCode || '27';
 
@@ -386,7 +403,7 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
         {/* Quick Shop GSTIN Badge */}
         <div className="px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-xs font-semibold text-slate-800 flex items-center gap-2 shrink-0">
           <Building2 className="w-4 h-4 text-amber-700" />
-          <span>GSTIN: <strong className="font-mono text-slate-950">{shopSettings?.gstin || '27AABCM1234F1Z5'}</strong></span>
+          <span>GSTIN: <strong className="font-mono text-slate-950">{shopSettings?.gstin || '27AMWPB3781F1ZR'}</strong></span>
         </div>
       </div>
 
@@ -1276,7 +1293,7 @@ export const GSTManagementPage: React.FC<GSTManagementPageProps> = ({
                     label="Shop GSTIN (15 characters)"
                     value={gstForm.gstin}
                     onChange={(e) => setGstForm({ ...gstForm, gstin: e.target.value.toUpperCase() })}
-                    placeholder="27AABCM1234F1Z5"
+                    placeholder="27AMWPB3781F1ZR"
                     required
                   />
                   {gstForm.gstin && (

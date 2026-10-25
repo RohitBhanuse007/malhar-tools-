@@ -39,7 +39,7 @@ export const SHOP_SETTINGS = {
     'Hardware Fittings',
     'General Materials'
   ],
-  gstin: '27AABCM1234F1Z5',
+  gstin: '27AMWPB3781F1ZR',
   state: 'Maharashtra',
   stateCode: '27',
   tradeName: 'Malhar Tools Hardware & Spares',

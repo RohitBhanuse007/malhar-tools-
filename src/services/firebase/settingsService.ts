@@ -40,7 +40,7 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
     'General Materials'
   ],
   // GST & Invoicing Defaults
-  gstin: '27AABCM1234F1Z5',
+  gstin: '27AMWPB3781F1ZR',
   state: 'Maharashtra',
   stateCode: '27',
   tradeName: 'Malhar Tools Hardware & Spares',
@@ -67,6 +67,9 @@ function getLocalSettings(): ShopSettings {
       }
       if (parsed.email === 'owner@malhartools.com') {
         parsed.email = 'bhanusedarshan@gmail.com';
+      }
+      if (!parsed.gstin || parsed.gstin === '27AABCM1234F1Z5') {
+        parsed.gstin = '27AMWPB3781F1ZR';
       }
       return {
         ...DEFAULT_SHOP_SETTINGS,
