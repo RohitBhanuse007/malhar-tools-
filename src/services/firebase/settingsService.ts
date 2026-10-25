@@ -22,7 +22,8 @@ export const DEFAULT_SHOP_SETTINGS: ShopSettings = {
   shopName: 'Malhar Tools',
   shopNameMr: 'मल्हार टूल्स',
   address: 'Shop No. 4, Main Hardware Market, Station Road, Sangli, Maharashtra',
-  contactNumber: '+91 8208219305',
+  contactNumber: '+91 9270693111',
+  secondaryContactNumber: '+91 9172978555',
   email: 'bhanusedarshan@gmail.com',
   logoUrl: '/logo.png',
   defaultLanguage: 'en',
@@ -62,8 +63,21 @@ function getLocalSettings(): ShopSettings {
     if (raw) {
       const parsed = JSON.parse(raw);
       // Automatically migrate legacy demo contact or email
-      if (parsed.contactNumber === '+91 98765 43210' || parsed.contactNumber === '9876543210') {
-        parsed.contactNumber = '+91 8208219305';
+      if (
+        !parsed.contactNumber ||
+        parsed.contactNumber === '+91 98765 43210' ||
+        parsed.contactNumber === '9876543210' ||
+        parsed.contactNumber === '+91 8208219305' ||
+        parsed.contactNumber === '8208219305'
+      ) {
+        parsed.contactNumber = '+91 9270693111';
+      }
+      if (
+        !parsed.secondaryContactNumber ||
+        parsed.secondaryContactNumber === '+91 8208219305' ||
+        parsed.secondaryContactNumber === '8208219305'
+      ) {
+        parsed.secondaryContactNumber = '+91 9172978555';
       }
       if (parsed.email === 'owner@malhartools.com') {
         parsed.email = 'bhanusedarshan@gmail.com';

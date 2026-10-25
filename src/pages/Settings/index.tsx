@@ -312,10 +312,20 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                   name="contactNumber"
                   value={formData.contactNumber}
                   onChange={handleChange}
-                  placeholder="+91 8208219305"
+                  placeholder="+91 9270693111"
                   required
                 />
 
+                <Input
+                  label={language === 'mr' ? 'दुसरा संपर्क नंबर (पर्यायी)' : 'Secondary Contact Number (Optional)'}
+                  name="secondaryContactNumber"
+                  value={formData.secondaryContactNumber || ''}
+                  onChange={handleChange}
+                  placeholder="+91 9172978555"
+                />
+              </div>
+
+              <div>
                 <Input
                   label={t('settings.email')}
                   type="email"

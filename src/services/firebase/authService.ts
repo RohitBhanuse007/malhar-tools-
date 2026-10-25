@@ -85,10 +85,13 @@ async function hashOtpString(str: string): Promise<string> {
  */
 export async function getAuthorizedOwnerProfile(): Promise<{
   contactNumber: string;
+  secondaryContactNumber?: string;
   normalized10: string;
+  valid10Numbers: string[];
   email: string;
 }> {
   let contact = DEFAULT_SHOP_SETTINGS.contactNumber;
+  let secondaryContact = DEFAULT_SHOP_SETTINGS.secondaryContactNumber;
   let email = DEFAULT_SHOP_SETTINGS.email;
 
   // 1. Try reading from cached local storage
@@ -97,6 +100,7 @@ export async function getAuthorizedOwnerProfile(): Promise<{
     if (local) {
       const parsed = JSON.parse(local);
       if (parsed.contactNumber) contact = parsed.contactNumber;
+      if (parsed.secondaryContactNumber) secondaryContact = parsed.secondaryContactNumber;
       if (parsed.email) email = parsed.email;
     }
   } catch {
@@ -111,6 +115,7 @@ export async function getAuthorizedOwnerProfile(): Promise<{
       if (snap.exists()) {
         const data = snap.data();
         if (data.contactNumber) contact = data.contactNumber;
+        if (data.secondaryContactNumber) secondaryContact = data.secondaryContactNumber;
         if (data.email) email = data.email;
       }
     } catch (e) {
@@ -119,7 +124,17 @@ export async function getAuthorizedOwnerProfile(): Promise<{
   }
 
   const normalized10 = contact.replace(/\D/g, '').slice(-10);
-  return { contactNumber: contact, normalized10, email };
+  const secondary10 = secondaryContact ? secondaryContact.replace(/\D/g, '').slice(-10) : '';
+
+  const valid10Numbers = Array.from(new Set([
+    '9270693111',
+    '9172978555',
+    '8208219305',
+    normalized10,
+    secondary10,
+  ])).filter(Boolean);
+
+  return { contactNumber: contact, secondaryContactNumber: secondaryContact, normalized10, valid10Numbers, email };
 }
 
 /**
@@ -136,9 +151,9 @@ export async function verifyOwnerPhoneNumber(enteredPhone: string): Promise<{
     throw new Error('Please enter a valid 10-digit mobile number.');
   }
 
-  const { normalized10, email } = await getAuthorizedOwnerProfile();
+  const { valid10Numbers, email } = await getAuthorizedOwnerProfile();
 
-  if (cleanEntered !== normalized10) {
+  if (!valid10Numbers.includes(cleanEntered)) {
     throw new Error(
       'This mobile number is not registered as the shop owner. Password recovery is only permitted for the authorized owner.'
     );

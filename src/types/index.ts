@@ -131,6 +131,7 @@ export interface ShopSettings {
   shopNameMr?: string;
   address: string;
   contactNumber: string;
+  secondaryContactNumber?: string;
   email: string;
   logoUrl?: string;
   defaultLanguage: 'en' | 'mr';
