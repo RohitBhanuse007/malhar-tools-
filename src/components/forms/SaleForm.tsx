@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Product, Customer, PaymentMode } from '../../types';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import { SearchableProductSelect } from '../ui/SearchableProductSelect';
 import { Button } from '../ui/Button';
 import { useLanguage } from '../../context/LanguageContext';
 import { validateSale } from '../../utils/validators';
@@ -197,12 +198,13 @@ export const SaleForm: React.FC<SaleFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Product Selector */}
-      <Select
+      {/* Searchable Product Selector */}
+      <SearchableProductSelect
         label={t('sales.product')}
+        products={products}
         value={productId}
-        onChange={(e) => {
-          const newId = e.target.value;
+        mode="sale"
+        onChange={(newId) => {
           setProductId(newId);
           lastPopulatedProductIdRef.current = newId;
           const p = products.find((item) => item.id === newId);
@@ -212,7 +214,6 @@ export const SaleForm: React.FC<SaleFormProps> = ({
           }
           if (errors.productId) setErrors((prev) => ({ ...prev, productId: '' }));
         }}
-        options={productOptions}
         placeholder={t('common.selectProduct')}
         error={errors.productId}
         required

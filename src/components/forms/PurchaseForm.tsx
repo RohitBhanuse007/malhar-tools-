@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Product, Purchase, PaymentStatus } from '../../types';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import { SearchableProductSelect } from '../ui/SearchableProductSelect';
 import { Button } from '../ui/Button';
 import { useLanguage } from '../../context/LanguageContext';
 import { validatePurchase } from '../../utils/validators';
@@ -142,12 +143,13 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Product Selector */}
-      <Select
+      {/* Searchable Product Selector */}
+      <SearchableProductSelect
         label={t('purchases.product')}
+        products={products}
         value={productId}
-        onChange={(e) => {
-          const newId = e.target.value;
+        mode="purchase"
+        onChange={(newId) => {
           setProductId(newId);
           lastPopulatedProductIdRef.current = newId;
           const p = products.find((item) => item.id === newId);
@@ -158,7 +160,6 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
           }
           if (errors.productId) setErrors((prev) => ({ ...prev, productId: '' }));
         }}
-        options={productOptions}
         placeholder={t('common.selectProduct')}
         error={errors.productId}
         required
